@@ -1,3 +1,3 @@
 **Dependencies:**
 
-1. pip install openai
+1. pip install -r dependencies.txt

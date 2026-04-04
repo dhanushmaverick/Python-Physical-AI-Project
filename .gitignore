@@ -1,0 +1,5 @@
+AI_proj/
+venv/
+.venv/
+__pycache__/
+*.pyc
