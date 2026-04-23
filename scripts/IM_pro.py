@@ -25,11 +25,11 @@ def I_pro():
     cv2.waitKey(0)
 
     
-    r_thresh = (r > 0.5).astype('uint8') * 255
+    r_thresh = (r > 0.45).astype('uint8') * 255
     #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
     cv2.imshow("Red Binary",r_thresh);
     cv2.waitKey(0)
-    g_thresh = (g>0.4).astype('uint8')*255;
+    g_thresh = (g>0.45).astype('uint8')*255;
     cv2.imshow("Green Binary",g_thresh);
     cv2.waitKey(0)
     b_thresh = (b>0.5).astype('uint8')*255;
@@ -155,4 +155,5 @@ def I_pro():
         print("No blue block found");
     cv2.imshow("Block detection: ",img_display);
     cv2.waitKey(0);
+    cv2.destroyAllWindows();
 I_pro();
