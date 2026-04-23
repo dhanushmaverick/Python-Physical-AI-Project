@@ -11,8 +11,8 @@ def main():
     ensure_directories()
 
     calibrator = CameraCalibrator(
-        checkerboard_size=(9, 6),   # inner corners
-        square_size_mm=25.0,
+        checkerboard_size=(11, 7),   # inner corners
+        square_size_mm=30.0,  
     )
 
     report = calibrator.calibrate_from_images(
