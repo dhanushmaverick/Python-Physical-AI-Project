@@ -69,12 +69,12 @@ class CameraCalibrator:
             #     cv2.circle(image, (i[0][0], i[0][1]), 5, (0, 255, 0), -1)  #visualize the detected corners on the image for debugging purposes; draws a green circle at each detected corner
 
             if found:
-                refined_corners = cv2.cornerSubPix(
+                refined_corners = cv2.cornerSubPix(  #refining the coreners to sub-pixel accuracy, which can improve calibration results
                     gray,
                     corners,
                     (11, 11), 
                     (-1, -1),
-                    criteria,
+                    criteria, # termination criteria which was defined above
                 )
                 print(f"Found corners in image: {image_path.name}")  #debugging output to indicate which images were successfully processed
 
@@ -98,11 +98,11 @@ class CameraCalibrator:
             None,
         )
 
-        mean_reprojection_error = self._compute_mean_reprojection_error(
+        mean_reprojection_error = self._compute_mean_reprojection_error(  
             objpoints, imgpoints, rvecs, tvecs, camera_matrix, dist_coeffs
-        )
+        )   #custom quality check
 
-        np.savez(
+        np.savez( #saving the calibration results in a .npz file format in a numpy archive
             output_file,
             camera_matrix=camera_matrix,
             dist_coeffs=dist_coeffs,
