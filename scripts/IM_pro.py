@@ -3,6 +3,9 @@ import numpy as np;
 from collections import namedtuple;
 import math
 def I_pro():
+    #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
+    thresh_vals = [0.5, 0.5, 0.5];
+    Area = [10000,500000];
     im = cv2.imread("scripts/Img.jpeg");
     
     B, G, R = cv2.split(im)
@@ -23,16 +26,22 @@ def I_pro():
     b = B  / (R+G+B+eps) ;
     cv2.imshow("Blue", b);
     cv2.waitKey(0)
-
     
-    r_thresh = (r > 0.5).astype('uint8') * 255
+    r_thresh_val = thresh_vals[0];
+    g_thresh_val = thresh_vals[1];
+    b_thresh_val = thresh_vals[2];
+    
+    #area_min = 500;
+    #area_max = 500000;
+    
+    r_thresh = (r > r_thresh_val).astype('uint8') * 255
     #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
     cv2.imshow("Red Binary",r_thresh);
     cv2.waitKey(0)
-    g_thresh = (g>0.4).astype('uint8')*255;
+    g_thresh = (g>g_thresh_val).astype('uint8')*255;
     cv2.imshow("Green Binary",g_thresh);
     cv2.waitKey(0)
-    b_thresh = (b>0.5).astype('uint8')*255;
+    b_thresh = (b>b_thresh_val).astype('uint8')*255;
     cv2.imshow("Blue Binary", b_thresh)
     cv2.waitKey(0)
   
@@ -41,13 +50,15 @@ def I_pro():
     img_display = im.copy();
     lineWidth = 2;
     MarkerSize = 8;
+    min_area = Area[0];
+    max_Area = Area[1];
     try:
         num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(r_thresh,connectivity=8, ltype = cv2.CV_32S);
         BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b']);
         m_red = [];
         for i in range(1,num_labels):
             area = stats[i,cv2.CC_STAT_AREA];
-            if(100<=area<=500000):
+            if(min_area<=area<=500000):
                 uc, vc = centroids[i];
                 bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
                 blob_mask = (labels==i).astype('uint8')*255;
@@ -55,7 +66,7 @@ def I_pro():
                 if(len(contours)>0):
                     ellipse_red = cv2.fitEllipse(contours[0]);
                     (ex,ey),(a,b),theta = ellipse_red;
-                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2));
+                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2));
         #visualise
         
         for blob in m_red:
@@ -84,7 +95,7 @@ def I_pro():
         m_green = [];
         for i in range(1,num_labels):
             area = stats[i,cv2.CC_STAT_AREA];
-            if(500<=area<=500000):
+            if(min_area<=area<=500000):
                 uc, vc = centroids[i];
                 bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
                 blob_mask = (labels==i).astype('uint8')*255;
@@ -121,7 +132,7 @@ def I_pro():
         m_blue = [];
         for i in range(1,num_labels):
             area = stats[i,cv2.CC_STAT_AREA];
-            if(500<=area<=500000):
+            if(min_area<=area<=500000):
                 uc, vc = centroids[i];
                 bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
                 blob_mask = (labels==i).astype('uint8')*255;
@@ -155,4 +166,5 @@ def I_pro():
         print("No blue block found");
     cv2.imshow("Block detection: ",img_display);
     cv2.waitKey(0);
+    cv2.destroyAllWindows();
 I_pro();
