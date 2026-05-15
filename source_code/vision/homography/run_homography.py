@@ -44,7 +44,7 @@ camera_matrix, dist_coeffs = load_intrinsics(INTRINSICS_FILE)
 
             # CHANGE THE FILE TO IMAGE PATH SUCH THAT YOU KNOW THE REAL-WORLD COORDINATES OF THE 4 POINTS YOU CLICK IN THE IMAGE
 
-IMG_PATH = RAW_IMAGES_DIR /"Im_L_1.png"  # CHANGE THIS TO YOUR IMAGE PATH
+IMG_PATH = RAW_IMAGES_DIR /"img_00.png"  # CHANGE THIS TO YOUR IMAGE PATH
 
 img = cv2.imread(IMG_PATH)
 
@@ -87,9 +87,9 @@ print(image_pts)
 #  The order of these points must match the order in which they were clicked in the image for accurate homography computation.
 world_pts = np.array([
     [0, 0],
-    [300, 0],
-    [300, 210],
-    [0, 210]
+    [180, 0],
+    [180, 120],
+    [0, 120]
 ], dtype=np.float32)
 
 print("\nWorld points:")
@@ -105,7 +105,7 @@ print(H)
 
 # test a pixel coordinate (in the image) to see what its corresponding world coordinate is 
 # using the computed homography matrix, this is just an example and can be changed to any pixel coordinate you want to test
-pixel = np.array([320, 240], dtype=np.float32) 
+pixel = np.array([620, 480], dtype=np.float32) 
 
 world = image_to_world(pixel, H)
 

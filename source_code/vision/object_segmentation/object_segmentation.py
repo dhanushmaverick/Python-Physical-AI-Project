@@ -6,7 +6,7 @@ def I_pro():
     #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
     thresh_vals = [0.5, 0.5, 0.5];
     Area = [10000,500000];
-    im = cv2.imread("scripts/Img.jpeg");
+    im = cv2.imread("./Img.jpeg");
     
     B, G, R = cv2.split(im)
 
