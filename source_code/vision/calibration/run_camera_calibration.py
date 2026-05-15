@@ -1,3 +1,9 @@
+"""
+Run:
+    python -m scripts.run_camera_calibration
+Usage: 
+    Saves calibration matrix inside data
+"""
 from app.vision.calibration import CameraCalibrator
 from app.utils.paths import (
     RAW_IMAGES_DIR,
