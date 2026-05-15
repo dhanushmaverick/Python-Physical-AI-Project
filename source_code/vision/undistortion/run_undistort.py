@@ -1,10 +1,13 @@
-from app.utils.paths import (
+#run command
+#      python -m source_code.vision.undistortion.run_undistort
+
+from source_code.utility.paths import (
     RAW_IMAGES_DIR,
     INTRINSICS_FILE,
     REPORT_FILE,
     ensure_directories,
 )
-from app.vision.undistort import load_intrinsics, visualize_undistortion
+from source_code.vision.undistortion.undistort import load_intrinsics, visualize_undistortion
 import cv2
 
 

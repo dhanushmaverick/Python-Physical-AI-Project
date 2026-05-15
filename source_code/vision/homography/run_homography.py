@@ -1,9 +1,12 @@
-from app.utils.paths import INTRINSICS_FILE
+#run command:
+#       python -m source_code.vision.homography.run_homography
+
+from source_code.utility.paths import INTRINSICS_FILE , RAW_IMAGES_DIR
 import cv2
 import numpy as np
 
-from app.vision.undistort import load_intrinsics, undistort_frame
-from app.vision.homography import compute_homography, image_to_world
+from source_code.vision.undistortion.undistort import load_intrinsics, undistort_frame
+from source_code.vision.homography.homography import compute_homography, image_to_world
 
 
 clicked_points = []
@@ -41,7 +44,7 @@ camera_matrix, dist_coeffs = load_intrinsics(INTRINSICS_FILE)
 
             # CHANGE THE FILE TO IMAGE PATH SUCH THAT YOU KNOW THE REAL-WORLD COORDINATES OF THE 4 POINTS YOU CLICK IN THE IMAGE
 
-IMG_PATH = "data/calibration/raw_images/Im_L_1.png"  # CHANGE THIS TO YOUR IMAGE PATH
+IMG_PATH = RAW_IMAGES_DIR /"Im_L_1.png"  # CHANGE THIS TO YOUR IMAGE PATH
 
 img = cv2.imread(IMG_PATH)
 

@@ -1,4 +1,7 @@
-from app.utils.paths import RAW_IMAGES_DIR, ensure_directories
+#Run command:
+#       python -m source_code.vision.calibration.clear_raw_images
+
+from source_code.utility.paths import RAW_IMAGES_DIR, ensure_directories
 
 
 def clear_raw_images() -> None:

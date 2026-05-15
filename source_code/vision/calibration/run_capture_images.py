@@ -1,6 +1,6 @@
 """
 Usage:
-    python -m scripts.capture_images
+    python -m source_code.vision.calibration.run_capture_images
 
 Description:
     This script opens a live video stream from the connected camera and allows
@@ -29,7 +29,7 @@ Example:
 """
 # Run camera calibration after this
 
-from app.utils.paths import RAW_IMAGES_DIR, ensure_directories
+from source_code.utility.paths import RAW_IMAGES_DIR, ensure_directories
 import cv2
 
 ensure_directories()

@@ -1,3 +1,6 @@
+# Run command : 
+#            python -m source_code.vision.camera.test_camera
+
 import cv2
 import sys
 from pathlib import Path
@@ -6,7 +9,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-from app.vision.webcam import Webcam
+from source_code.vision.camera.camera import Webcam
 
 
 def main():
