@@ -12,7 +12,7 @@ def main():
 
     calibrator = CameraCalibrator(
         checkerboard_size=(9, 6),   # inner corners
-        square_size_mm=25.0,
+        square_size_mm=30.0,
     )
 
     report = calibrator.calibrate_from_images(

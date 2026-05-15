@@ -2,7 +2,7 @@ import cv2;
 import numpy as np;
 from collections import namedtuple;
 import math
-def I_pro():
+def I_pro(r_AI_thresh = 0.7, g_AI_thresh = 0.5, b_AI_thresh = 0.4):
     im = cv2.imread("scripts/Img.jpeg");
     im = cv2.convertScaleAbs(im,alpha=1.4,beta=0);
     R,G,B = cv2.split(im);
@@ -19,13 +19,13 @@ def I_pro():
     cv2.imshow("Blue", b);
     cv2.waitKey(0)
 
-    r_thresh = (r>0.7).astype('uint8')*255;
+    r_thresh = (r>r_AI_thresh).astype('uint8')*255;
     cv2.imshow("Red Binary",r_thresh);
     cv2.waitKey(0)
-    g_thresh = (g>0.5).astype('uint8')*255;
+    g_thresh = (g>g_AI_thresh).astype('uint8')*255;
     cv2.imshow("Green Binary",g_thresh);
     cv2.waitKey(0)
-    b_thresh = (b>0.4).astype('uint8')*255;
+    b_thresh = (b>b_AI_thresh).astype('uint8')*255;
     cv2.imshow("Blue Binary", b_thresh)
     cv2.waitKey(0)
 
