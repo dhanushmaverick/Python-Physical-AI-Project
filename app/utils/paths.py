@@ -8,7 +8,11 @@ RAW_IMAGES_DIR = CALIBRATION_DIR / "raw_images"
 
 INTRINSICS_FILE = CALIBRATION_DIR / "camera_intrinsics.npz"
 REPORT_FILE = CALIBRATION_DIR / "calibration_report.json"
+HOMOGRAPHY_FILE = CALIBRATION_DIR / "homography.npz"
+HOMOGRAPHY_REPORT = CALIBRATION_DIR / "homography_report.json"
 
 
 def ensure_directories() -> None:
     RAW_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+    HOMOGRAPHY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    
