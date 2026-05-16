@@ -56,9 +56,9 @@ class CameraCalibrator:
             #                    [-1, 5, -1],
             #                    [0, -1, 0]])
             # gray = cv2.filter2D(gray, -1, kernel)   # sharpens edges a bit
-            cv2.imshow("processed", gray)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            # cv2.imshow("processed", gray)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
 
             ## problematic line:
             found, corners = cv2.findChessboardCorners(gray, self.checkerboard_size, flags= cv2.CALIB_CB_EXHAUSTIVE)  #returns a boolean if found and corner locations
