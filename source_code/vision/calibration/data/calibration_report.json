@@ -1,54 +1,50 @@
 {
-    "num_total_images": 24,
-    "num_valid_images": 20,
-    "num_invalid_images": 4,
+    "num_total_images": 21,
+    "num_valid_images": 21,
+    "num_invalid_images": 0,
     "valid_images": [
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_1.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_10.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_11.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_12.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_13.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_14.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_15.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_16.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_17.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_18.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_19.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_2.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_20.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_3.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_4.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_5.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_6.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_7.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_8.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\Im_L_9.png"
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_00.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_01.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_02.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_03.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_04.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_05.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_06.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_07.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_08.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_09.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_10.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_11.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_12.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_13.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_14.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_15.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_16.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_17.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_18.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_19.png",
+        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_20.png"
     ],
-    "invalid_images": [
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_21.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_22.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_23.png",
-        "C:\\Users\\Praneeth Kavibala\\Physical_AI\\Python-Physical-AI-Project\\source_code\\vision\\calibration\\data\\raw_images\\img_24.png"
-    ],
-    "rms_error": 0.2595446444602373,
-    "mean_reprojection_error": 0.027950418216346234,
+    "invalid_images": [],
+    "rms_error": 0.45564684145942896,
+    "mean_reprojection_error": 0.064723963920825,
     "image_width": 1280,
     "image_height": 720,
     "checkerboard_size": {
-        "cols": 11,
-        "rows": 7
+        "cols": 8,
+        "rows": 6
     },
     "square_size_mm": 30.0,
     "camera_matrix": [
         [
-            701.3673594005455,
+            2059.9327567621326,
             0.0,
-            515.1364762933681
+            644.6661674747094
         ],
         [
             0.0,
-            712.3487200652244,
-            280.2253470813704
+            2061.583485585272,
+            385.34481912662824
         ],
         [
             0.0,
@@ -58,11 +54,11 @@
     ],
     "dist_coeffs": [
         [
-            0.019556871918826157,
-            -0.12017873044610006,
-            -0.0001653992986062259,
-            -0.00014395861429672172,
-            0.1344382586409339
+            -0.39030367007252686,
+            0.8426772321076844,
+            -0.0008477272632037413,
+            0.00021805879864635492,
+            -5.301535285837424
         ]
     ]
 }

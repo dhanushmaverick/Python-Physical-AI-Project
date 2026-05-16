@@ -7,7 +7,7 @@ import numpy as np
 class CameraCalibrator:
     def __init__(
         self,
-        checkerboard_size: tuple[int, int] = (11, 7),  #change depending on the checkerboard used (number of inner corners) 1 less than the number of squares in each dimension
+        checkerboard_size: tuple[int, int] = (7, 5),  #change depending on the checkerboard used (number of inner corners) 1 less than the number of squares in each dimension
         square_size_mm: float = 30.0,   #size in mm
     ):
         self.checkerboard_size = checkerboard_size
@@ -50,18 +50,18 @@ class CameraCalibrator:
                                           #openCV expects the image size in (width, height) format, which is why we reverse
 
             # preprocessing 
-            # gray = cv2.equalizeHist(gray)   # improves contrast
-            # #gray = cv2.GaussianBlur(gray, (5, 5), 0)   # reduces noise slightly
-            # # kernel = np.array([[0, -1, 0],
-            # #                    [-1, 5, -1],
-            # #                    [0, -1, 0]])
-            # # gray = cv2.filter2D(gray, -1, kernel)   # sharpens edges a bit
-            # cv2.imshow("processed", gray)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
+            gray = cv2.equalizeHist(gray)   # improves contrast
+            #gray = cv2.GaussianBlur(gray, (5, 5), 0)   # reduces noise slightly
+            # kernel = np.array([[0, -1, 0],
+            #                    [-1, 5, -1],
+            #                    [0, -1, 0]])
+            # gray = cv2.filter2D(gray, -1, kernel)   # sharpens edges a bit
+            cv2.imshow("processed", gray)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
             ## problematic line:
-            found, corners = cv2.findChessboardCorners(gray, self.checkerboard_size, None)  #returns a boolean if found and corner locations
+            found, corners = cv2.findChessboardCorners(gray, self.checkerboard_size, flags= cv2.CALIB_CB_EXHAUSTIVE)  #returns a boolean if found and corner locations
             # if found:
             # print(found)
 

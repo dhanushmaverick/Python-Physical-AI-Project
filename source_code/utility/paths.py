@@ -7,6 +7,7 @@ VISION_DIR = SOURCE_CODE_DIR / "vision"
 CALIBRATION_DIR = VISION_DIR / "calibration"
 DATA_DIR = CALIBRATION_DIR / "data"
 RAW_IMAGES_DIR = DATA_DIR / "raw_images"
+OBJ_SEGMENTATION_DIR = VISION_DIR / "object_segmentation"
 
 
 INTRINSICS_FILE = DATA_DIR/ "camera_intrinsics.npz"

@@ -12,7 +12,7 @@ import cv2
 
 
 intrinsics_file = INTRINSICS_FILE
-image_file = RAW_IMAGES_DIR / "Im_L_1.png"  # change this to test different images
+image_file = RAW_IMAGES_DIR / "img_01.png"  # change this to test different images
 
 camera_matrix, dist_coeffs = load_intrinsics(intrinsics_file)
 frame = cv2.imread(str(image_file))
