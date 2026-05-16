@@ -1,8 +1,9 @@
-import cv2;
-import numpy as np;
-from collections import namedtuple;
+import cv2
+import numpy as np
+from collections import namedtuple
 import math
 from source_code.utility.paths import OBJ_SEGMENTATION_DIR
+import json
 def I_pro():
     #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
     thresh_vals = [0.5, 0.5, 0.5];
@@ -18,154 +19,165 @@ def I_pro():
     cv2.imshow("Image",im)
     cv2.waitKey(0)
     eps = 1e-6;
-    r = R  / (R+G+B+eps) ;
-    cv2.imshow("Red", r);
+    r = R  / (R+G+B+eps) 
+    cv2.imshow("Red", r)
     cv2.waitKey(0)
-    g = G  / (R+G+B+eps) ;
-    cv2.imshow("Green", g);
+    g = G  / (R+G+B+eps) 
+    cv2.imshow("Green", g)
     cv2.waitKey(0);
-    b = B  / (R+G+B+eps) ;
-    cv2.imshow("Blue", b);
+    b = B  / (R+G+B+eps) 
+    cv2.imshow("Blue", b)
     cv2.waitKey(0)
     
-    r_thresh_val = thresh_vals[0];
-    g_thresh_val = thresh_vals[1];
-    b_thresh_val = thresh_vals[2];
+    r_thresh_val = thresh_vals[0]
+    g_thresh_val = thresh_vals[1]
+    b_thresh_val = thresh_vals[2]
     
     #area_min = 500;
     #area_max = 500000;
     
     r_thresh = (r > r_thresh_val).astype('uint8') * 255
     #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
-    cv2.imshow("Red Binary",r_thresh);
+    cv2.imshow("Red Binary",r_thresh)
     cv2.waitKey(0)
-    g_thresh = (g>g_thresh_val).astype('uint8')*255;
-    cv2.imshow("Green Binary",g_thresh);
+    g_thresh = (g>g_thresh_val).astype('uint8')*255
+    cv2.imshow("Green Binary",g_thresh)
     cv2.waitKey(0)
-    b_thresh = (b>b_thresh_val).astype('uint8')*255;
+    b_thresh = (b>b_thresh_val).astype('uint8')*255
     cv2.imshow("Blue Binary", b_thresh)
     cv2.waitKey(0)
   
     # Detect block
-    extension =1.5 ;
+    extension =1.5 
     img_display = im.copy();
-    lineWidth = 2;
+    lineWidth = 2
     MarkerSize = 8;
-    min_area = Area[0];
-    max_Area = Area[1];
+    min_area = Area[0]
+    max_Area = Area[1]
     try:
-        num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(r_thresh,connectivity=8, ltype = cv2.CV_32S);
-        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b']);
-        m_red = [];
+        num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(r_thresh,connectivity=8, ltype = cv2.CV_32S)
+        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b'])
+        m_red = []
         for i in range(1,num_labels):
-            area = stats[i,cv2.CC_STAT_AREA];
+            area = stats[i,cv2.CC_STAT_AREA]
             if(min_area<=area<=500000):
-                uc, vc = centroids[i];
-                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
-                blob_mask = (labels==i).astype('uint8')*255;
-                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE);
+                uc, vc = centroids[i]
+                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]]
+                blob_mask = (labels==i).astype('uint8')*255
+                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
                 if(len(contours)>0):
-                    ellipse_red = cv2.fitEllipse(contours[0]);
+                    ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red;
-                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2));
+                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2))
         #visualise
         
         for blob in m_red:
             if(blob.a>0 and blob.b>0):
-                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi);
-                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth);
+                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi)
+                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth)
         for blob in m_red:
             center = (int(blob.uc),int(blob.vc));
-            cv2.circle(img_display,center,MarkerSize,(0,0,255),-1);
+            cv2.circle(img_display,center,MarkerSize,(0,0,255),-1)
         if len(m_red)>0:
-            x_m_red = m_red[0].uc;
-            y_m_red = m_red[0].vc;
-            m_red_center = np.array([x_m_red,y_m_red]);
+            x_m_red = m_red[0].uc
+            y_m_red = m_red[0].vc
+            m_red_center = np.array([x_m_red,y_m_red])
            
-            theta_rad = m_red[0].theta;
-            x_min = x_m_red - math.cos(m_red[0].theta)*m_red[0].a*extension;
-            x_max = x_m_red + math.cos(m_red[0].theta)*m_red[0].a*extension;
-            y_min = y_m_red - math.sin(m_red[0].theta)*m_red[0].a*extension;
-            y_max = y_m_red + math.sin(m_red[0].theta)*m_red[0].a*extension;
-            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth);
+            theta_rad = m_red[0].theta
+            x_min = x_m_red - math.cos(m_red[0].theta)*m_red[0].a*extension
+            x_max = x_m_red + math.cos(m_red[0].theta)*m_red[0].a*extension
+            y_min = y_m_red - math.sin(m_red[0].theta)*m_red[0].a*extension
+            y_max = y_m_red + math.sin(m_red[0].theta)*m_red[0].a*extension
+            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth)
     except Exception as e:
-        print("No red block found");
+        print("No red block found")
     try:
         num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(g_thresh,connectivity=8, ltype = cv2.CV_32S);
-        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b']);
-        m_green = [];
+        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b'])
+        m_green = []
         for i in range(1,num_labels):
-            area = stats[i,cv2.CC_STAT_AREA];
+            area = stats[i,cv2.CC_STAT_AREA]
             if(min_area<=area<=500000):
-                uc, vc = centroids[i];
-                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
-                blob_mask = (labels==i).astype('uint8')*255;
-                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE);
+                uc, vc = centroids[i]
+                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]]
+                blob_mask = (labels==i).astype('uint8')*255
+                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
                 if(len(contours)>0):
-                    ellipse_red = cv2.fitEllipse(contours[0]);
-                    (ex,ey),(a,b),theta = ellipse_red;
-                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2));
+                    ellipse_red = cv2.fitEllipse(contours[0])
+                    (ex,ey),(a,b),theta = ellipse_red
+                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2))
         #visualise
         
         for blob in m_green:
             if(blob.a>0 and blob.b>0):
-                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi);
-                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth);
+                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi)
+                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth)
         for blob in m_green:
             center = (int(blob.uc),int(blob.vc));
-            cv2.circle(img_display,center,MarkerSize,(0,255,0),-1);
+            cv2.circle(img_display,center,MarkerSize,(0,255,0),-1)
         if len(m_green)>0:
-            x_m_green = m_green[0].uc;
-            y_m_green = m_green[0].vc;
-            m_green_center = np.array([x_m_green,y_m_green]);
+            x_m_green = m_green[0].uc
+            y_m_green = m_green[0].vc
+            m_green_center = np.array([x_m_green,y_m_green])
            
             theta_rad = m_green[0].theta;
-            x_min = x_m_green - math.cos(m_green[0].theta)*m_green[0].a*extension;
-            x_max = x_m_green + math.cos(m_green[0].theta)*m_green[0].a*extension;
-            y_min = y_m_green - math.sin(m_green[0].theta)*m_green[0].a*extension;
-            y_max = y_m_green + math.sin(m_green[0].theta)*m_green[0].a*extension;
-            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth);
+            x_min = x_m_green - math.cos(m_green[0].theta)*m_green[0].a*extension
+            x_max = x_m_green + math.cos(m_green[0].theta)*m_green[0].a*extension
+            y_min = y_m_green - math.sin(m_green[0].theta)*m_green[0].a*extension
+            y_max = y_m_green + math.sin(m_green[0].theta)*m_green[0].a*extension
+            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth)
     except Exception as e:
-        print("No green block found");
+        print("No green block found")
     try:
-        num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(b_thresh,connectivity=8, ltype = cv2.CV_32S);
-        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b']);
-        m_blue = [];
+        num_labels, labels,stats, centroids = cv2.connectedComponentsWithStats(b_thresh,connectivity=8, ltype = cv2.CV_32S)
+        BlobFeature = namedtuple('BlobFeature',['label', 'area', 'uc', 'vc', 'bbox', 'theta', 'a', 'b'])
+        m_blue = []
         for i in range(1,num_labels):
-            area = stats[i,cv2.CC_STAT_AREA];
+            area = stats[i,cv2.CC_STAT_AREA]
             if(min_area<=area<=500000):
                 uc, vc = centroids[i];
-                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]];
-                blob_mask = (labels==i).astype('uint8')*255;
-                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE);
+                bbox = stats[i,[cv2.CC_STAT_LEFT, cv2.CC_STAT_TOP, cv2.CC_STAT_WIDTH, cv2.CC_STAT_HEIGHT]]
+                blob_mask = (labels==i).astype('uint8')*255
+                contours,_ = cv2.findContours(blob_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
                 if(len(contours)>0 ):
-                    ellipse_red = cv2.fitEllipse(contours[0]);
-                    (ex,ey),(a,b),theta = ellipse_red;
-                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2));
+                    ellipse_red = cv2.fitEllipse(contours[0])
+                    (ex,ey),(a,b),theta = ellipse_red
+                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2))
         #visualise
         
         for blob in m_blue:
             if(blob.a>0 and blob.b>0):
-                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi);
-                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth);
+                ellipse = ((blob.uc,blob.vc), (blob.a*2, blob.b*2), blob.theta*180/math.pi)
+                cv2.ellipse(img_display,ellipse,(0,0,0),lineWidth)
         for blob in m_blue:
-            center = (int(blob.uc),int(blob.vc));
-            cv2.circle(img_display,center,MarkerSize,(255,0,0),-1);
+            center = (int(blob.uc),int(blob.vc))
+            cv2.circle(img_display,center,MarkerSize,(255,0,0),-1)
         if len(m_blue)>0:
-            x_m_blue = m_blue[0].uc;
-            y_m_blue = m_blue[0].vc;
-            m_blue_center = np.array([x_m_blue,y_m_blue]);
+            x_m_blue = m_blue[0].uc
+            y_m_blue = m_blue[0].vc
+            m_blue_center = np.array([x_m_blue,y_m_blue])
            
-            theta_rad = m_blue[0].theta;
-            x_min = x_m_blue - math.cos(m_blue[0].theta)*m_blue[0].a*extension;
-            x_max = x_m_blue + math.cos(m_blue[0].theta)*m_blue[0].a*extension;
-            y_min = y_m_blue - math.sin(m_blue[0].theta)*m_blue[0].a*extension;
-            y_max = y_m_blue + math.sin(m_blue[0].theta)*m_blue[0].a*extension;
-            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth);
+            theta_rad = m_blue[0].theta
+            x_min = x_m_blue - math.cos(m_blue[0].theta)*m_blue[0].a*extension
+            x_max = x_m_blue + math.cos(m_blue[0].theta)*m_blue[0].a*extension
+            y_min = y_m_blue - math.sin(m_blue[0].theta)*m_blue[0].a*extension
+            y_max = y_m_blue + math.sin(m_blue[0].theta)*m_blue[0].a*extension
+            cv2.line(img_display,(int(x_min),int(y_min)), (int(x_max), int(y_max)),(0,0,0),lineWidth)
             
     except Exception as e:
-        print("No blue block found");
-    cv2.imshow("Block detection: ",img_display);
-    cv2.waitKey(0);
-    cv2.destroyAllWindows();
-I_pro();
+        print("No blue block found")
+    cv2.imshow("Block detection: ",img_display)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    processed_data = {
+            "red_block_position": m_red_center.tolist(),
+            "red_block_orientation": m_red[0].theta*(180/math.pi),
+            "green_block_position": m_green_center.tolist(),
+            "green_block_orientation": m_green[0].theta*(180/math.pi),
+            "blue_block_position": m_blue_center.tolist(),
+            "blue_block_orientation": m_blue[0].theta*(180/math.pi),
+        }
+    with open("object_segmentation/data/Pose.json",'w') as file:
+        json.dump(processed_data,file,indent=3);
+    
+I_pro()

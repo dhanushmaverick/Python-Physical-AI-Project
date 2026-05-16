@@ -17,7 +17,7 @@ def main():
     ensure_directories()
 
     calibrator = CameraCalibrator(
-        checkerboard_size=(8, 6),   # inner corners
+        checkerboard_size=(7,5),   # inner vertices
         square_size_mm=30.0,  
     )
 
