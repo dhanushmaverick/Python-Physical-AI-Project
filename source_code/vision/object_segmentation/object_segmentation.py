@@ -6,8 +6,8 @@ from source_code.utility.paths import OBJ_SEGMENTATION_DIR
 import json
 def I_pro():
     #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
-    thresh_vals = [0.5, 0.5, 0.5];
-    Area = [10000,500000];
+    thresh_vals = [0.45, 0.4, 0.55];
+    Area = [5000,500000];
     im = cv2.imread(OBJ_SEGMENTATION_DIR /"Img.jpeg");
     
     B, G, R = cv2.split(im)
