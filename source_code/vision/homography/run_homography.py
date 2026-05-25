@@ -1,10 +1,10 @@
 #run command:
 #       python -m source_code.vision.homography.run_homography
 
-from source_code.utility.paths import INTRINSICS_FILE , RAW_IMAGES_DIR
+from source_code.utility.paths import *
 import cv2
 import numpy as np
-
+import json
 from source_code.vision.undistortion.undistort import load_intrinsics, undistort_frame
 from source_code.vision.homography.homography import compute_homography, image_to_world
 
@@ -101,16 +101,13 @@ H = compute_homography(world_pts, image_pts)
 print("\nHomography matrix:")
 print(H)
 
-
+data = {"Homography_Matrix":H.tolist()}
+with open( HOMOGRAPHY_REPORT , "w") as file:
+    json.dump(data, file, indent=4)
 
 # test a pixel coordinate (in the image) to see what its corresponding world coordinate is 
 # using the computed homography matrix, this is just an example and can be changed to any pixel coordinate you want to test
-pixel = np.array([620, 480], dtype=np.float32) 
 
-world = image_to_world(pixel, H)
-
-print("\nTest pixel:", pixel)
-print("World coord:", world)
 
 
 ## all the coordinates founded by the Iblob function from Joel's part can be transformed to world coordinates 
