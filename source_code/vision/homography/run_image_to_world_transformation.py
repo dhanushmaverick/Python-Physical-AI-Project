@@ -27,7 +27,7 @@ for color in ["red", "green", "blue"]:
     world_position = image_to_world(image_position, H)
 
     world_data[f"{color}_block_position"] = world_position.tolist()
-    world_data[f"{color}_block_orientation"] = orientation
+    world_data[f"{color}_block_orientation"] = round(orientation,4)
 
 
 with open(HOMOGRAPHY_DATA / "World_Pose.json", "w") as file:

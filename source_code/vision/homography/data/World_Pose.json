@@ -1,17 +1,17 @@
 {
     "red_block_position": [
-        19.456730487417932,
-        9.850884774922811
+        19.457,
+        9.851
     ],
-    "red_block_orientation": 89.7196273803711,
+    "red_block_orientation": 89.7196,
     "green_block_position": [
-        162.23254021556767,
-        75.20602232885692
+        162.233,
+        75.206
     ],
-    "green_block_orientation": 26.975744247436527,
+    "green_block_orientation": 26.9757,
     "blue_block_position": [
-        81.30805217450195,
-        49.41455508328906
+        81.308,
+        49.415
     ],
-    "blue_block_orientation": 47.37146377563476
+    "blue_block_orientation": 47.3715
 }
