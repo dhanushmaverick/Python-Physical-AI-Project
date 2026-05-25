@@ -1,0 +1,45 @@
+#Common imports
+from robodk.robolink import *
+from robodk.robomath import *
+
+# Connection
+global RDK #makes RDK a global variable 
+robot.Connect() #Connect to the robot in robodk
+RDK = Robolink() #creates an object of class Robolink
+robot.Disconnect() #Disconnect from the robot
+# Get Items
+item = RDK.Item() #Access a particular item in the workspace
+#To open a Robodk station
+RDK.AddFile(path,file) #Opens the RoboDK file in roboDK
+# Robot Motion
+#For Targets
+robot.MoveJ(target) #Move Joint move to a target
+robot.MoveL(target) # Move Linear move to a target
+
+#For poses
+robot.MoveJ(pose) # Move Joint command to a pose
+robot.MoveL(pose) #Move Linear command to a pose
+
+# Pose Functions
+Frame.setPose(pose) # set the pose of a frame 
+
+RDK.setSimulationSpeed() #Sets the speed of the simulation
+
+#RunMode
+RDK.setRunMode() # sets the mode to simulation or real robot: RUNMODE_SIMULATE for Simulation and RUNMODE_RUN_ROBOT for real robot
+
+#Gripper operations
+item.setParent(tool) # attach the item to the tool (in this case gripper)
+item.setParent(RDK.World()) # detach the item from the tool (in this case gripper)
+
+# Common Constants from RoboDK
+ITEM_TYPE_ROBOT
+ITEM_TYPE_FRAME
+ITEM_TYPE_TARGET
+ITEM_TYPE_TOOL
+ITEM_TYPE_PROGRAM
+
+RUNMODE_SIMULATE
+RUNMODE_RUN_ROBOT
+
+
