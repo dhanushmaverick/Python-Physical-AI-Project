@@ -14,7 +14,7 @@ def image_to_world(image_point: np.ndarray, H: np.ndarray):
     world_pt = H_inv @ pt
     world_pt /= world_pt[2]
 
-    return world_pt[:2]
+    return np.round(world_pt[:2],3)
 
 
 def world_to_image(world_point: np.ndarray, H: np.ndarray):

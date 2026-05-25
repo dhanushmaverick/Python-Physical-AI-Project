@@ -12,8 +12,11 @@ import json
 with open(HOMOGRAPHY_DATA / "World_Pose.json", "r") as file:
     world_data = json.load(file)
 
-structured_string = json.dumps(world_data)
+structured_string = 'Syntax: "color_block_position" : [x, y], "color_block_orientation" : theta, \n' +json.dumps(world_data)
 
+print("-"*20,"\n\n")
+print(structured_string)   #just for checking how it got printed ... change it however you need
+print("-"*20,"\n\n")
 
 #print("\n\n",structured_string)   #just for checking how it got printed ... change it however you need
 
