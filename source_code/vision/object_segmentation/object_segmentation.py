@@ -1,52 +1,17 @@
+"""
+RUN Command: python -m source_code.vision.object_segmentation.object_segmentation
+"""
 import cv2
 import numpy as np
 from collections import namedtuple
 import math
-from source_code.utility.paths import OBJ_SEGMENTATION_DIR
 import json
-def I_pro():
-    #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
-    thresh_vals = [0.45, 0.4, 0.55];
-    Area = [5000,500000];
-    im = cv2.imread(OBJ_SEGMENTATION_DIR /"Img.jpeg");
-    
-    B, G, R = cv2.split(im)
+from source_code.vision.object_segmentation.image_preprocessing import threshold_image_RGB, threshold_image_HSV
+from source_code.utility.paths import OBJ_SEGMENTATION_DIR
 
-    R = R.astype(np.float32)
-    G = G.astype(np.float32)
-    B = B.astype(np.float32)
-
-    cv2.imshow("Image",im)
-    cv2.waitKey(0)
-    eps = 1e-6;
-    r = R  / (R+G+B+eps) 
-    cv2.imshow("Red", r)
-    cv2.waitKey(0)
-    g = G  / (R+G+B+eps) 
-    cv2.imshow("Green", g)
-    cv2.waitKey(0);
-    b = B  / (R+G+B+eps) 
-    cv2.imshow("Blue", b)
-    cv2.waitKey(0)
-    
-    r_thresh_val = thresh_vals[0]
-    g_thresh_val = thresh_vals[1]
-    b_thresh_val = thresh_vals[2]
-    
-    #area_min = 500;
-    #area_max = 500000;
-    
-    r_thresh = (r > r_thresh_val).astype('uint8') * 255
-    #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
-    cv2.imshow("Red Binary",r_thresh)
-    cv2.waitKey(0)
-    g_thresh = (g>g_thresh_val).astype('uint8')*255
-    cv2.imshow("Green Binary",g_thresh)
-    cv2.waitKey(0)
-    b_thresh = (b>b_thresh_val).astype('uint8')*255
-    cv2.imshow("Blue Binary", b_thresh)
-    cv2.waitKey(0)
-  
+def I_pro(im):
+    r_thresh, b_thresh ,g_thresh =  threshold_image_RGB(im)
+    Area = [5000,500000]
     # Detect block
     extension =1.5 
     img_display = im.copy();
@@ -179,5 +144,9 @@ def I_pro():
         }
     with open("object_segmentation/data/Pose.json",'w') as file:
         json.dump(processed_data,file,indent=3);
-    
-I_pro()
+
+def main():
+    I_pro(cv2.imread(OBJ_SEGMENTATION_DIR /"Img.jpeg"))
+
+if __name__ == "__main__":
+    main()
