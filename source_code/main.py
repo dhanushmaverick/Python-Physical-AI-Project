@@ -3,6 +3,7 @@
 import subprocess
 import sys
 import time
+from source_code.vision.Robodk.robodk_init import Robodk_init
 RUN_COMMANDS = {
     "1": {
         "name": "Test camera",
@@ -25,10 +26,14 @@ RUN_COMMANDS = {
         "cmd": [sys.executable, "-m", "source_code.vision.homography.run_homography"],
     },
     "6": {
+        "name": "RoboDK Initialization",
+        "cmd": [sys.executable, "-m", "source_code.vision.Robodk.robodk_init"],
+    },
+    "7": {
         "name": "Object segmentation",
         "cmd": [sys.executable, "-m", "source_code.vision.object_segmentation.object_segmentation"],
     },
-    "7": {
+    "8": {
         "name": "Image to world transformation",
         "cmd": [sys.executable, "-m", "source_code.vision.homography.run_image_to_world_transformation"],
     },
@@ -36,6 +41,7 @@ RUN_COMMANDS = {
         "name": "calibrate",
         "cmd": [sys.executable, "-m", "source_code.vision.camera.test_camera"],
     },
+    
     
 }
 
@@ -51,11 +57,14 @@ def main():
             print(f"{key}. {value['name']}")
 
         print("0. Exit")
+       
 
         choice = input("\nChoose an option: ")
 
         if choice == "0":
+            print("Exited")
             break
+        
 
         if choice in RUN_COMMANDS:
             run_command(choice)
@@ -64,14 +73,19 @@ def main():
             print("Invalid choice.")
 
 def run_command(choice):
-    command = RUN_COMMANDS[choice]
+    if(choice=="6"):
+        RDK = Robodk_init()
+        print("RoboDK station initialized.")
+        time.sleep(3)
+    else:
+        command = RUN_COMMANDS[choice]
 
-    print(f"\nRunning: {command['name']}")
-    print("Command:", " ".join(command["cmd"]))
+        print(f"\nRunning: {command['name']}")
+        print("Command:", " ".join(command["cmd"]))
 
-    subprocess.run(command["cmd"])
-    print("-"*20,"\n\n" ,f"Finished Running: {command['name']}")
-    time.sleep(3)
+        subprocess.run(command["cmd"])
+        print("-"*20,"\n\n" ,f"Finished Running: {command['name']}")
+        time.sleep(3)
 
 
 
