@@ -22,6 +22,7 @@ ROBO_DK_STATION_PATH = SOURCE_CODE_DIR / "RoboDKSIM.rdk"
 INTRINSICS_FILE = DATA_DIR/ "camera_intrinsics.npz"
 REPORT_FILE = DATA_DIR/ "calibration_report.json"
 HOMOGRAPHY_REPORT = HOMOGRAPHY_DATA /  "homography_report.json"
+WORLD_POSE = HOMOGRAPHY_DATA / "World_Pose.json"
 
 
 def ensure_directories() -> None:
