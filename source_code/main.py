@@ -25,13 +25,18 @@ RUN_COMMANDS = {
         "cmd": [sys.executable, "-m", "source_code.vision.homography.run_homography"],
     },
     "6": {
+        "name": "RoboDK Initialization",
+        "cmd": [sys.executable, "-m", "source_code.vision.Robodk.robodk_init"],
+    },
+    "7": {
         "name": "Object segmentation",
         "cmd": [sys.executable, "-m", "source_code.vision.object_segmentation.object_segmentation"],
     },
-    "7": {
+    "8": {
         "name": "Image to world transformation",
         "cmd": [sys.executable, "-m", "source_code.vision.homography.run_image_to_world_transformation"],
     },
+    
     
 }
 
