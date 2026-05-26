@@ -4,3 +4,8 @@ pyyaml
 robodk
 requests
 openai
+langchain
+langchain-community
+langchain-openai
+python-dotenv
+pydantic

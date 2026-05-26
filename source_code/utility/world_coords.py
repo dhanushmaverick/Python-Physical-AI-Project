@@ -15,8 +15,7 @@ with open(HOMOGRAPHY_DATA / "World_Pose.json", "r") as file:
 structured_string = json.dumps(world_data)
 
 
-print("\n\n",structured_string)   #just for checking how it got printed ... change it however you need
+#print("\n\n",structured_string)   #just for checking how it got printed ... change it however you need
 
-print(len(structured_string))
-def get_world_coords_string():
-    return structured_string
+#print(len(structured_string))
+
