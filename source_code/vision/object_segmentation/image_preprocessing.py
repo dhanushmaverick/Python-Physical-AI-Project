@@ -123,7 +123,7 @@ def threshold_image_HSV(im): # NON FUNCTIONAL !!! --> doesn't work for BLUE!
     return r_thresh, b_thresh, g_thresh
 
 def main():
-    threshold_image_RGB(im=OBJ_SEGMENTATION_DIR /"Img.jpeg")
+    threshold_image_RGB(OBJ_SEGMENTATION_DIR /"Img.jpeg")
     #threshold_image_HSV(im=OBJ_SEGMENTATION_DIR /"Img.jpeg")
 
 if __name__ == "__main__":

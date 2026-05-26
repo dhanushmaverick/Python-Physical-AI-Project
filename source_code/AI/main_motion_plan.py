@@ -1,139 +1,106 @@
 import math
-from robodk.robolink import *
+from robodk.robolink import Robolink, ITEM_TYPE_ROBOT
 from robodk.robomath import *
 
-# --------------------
-# Workspace setup
-# --------------------
-# Connection
+# ------------------------------------------------------------
+# Auto-generated motion plan: Stack red on green, then blue.
+# ------------------------------------------------------------
+
 RDK = Robolink()
 
-# NOTE: We assume the RoboDK station is already set up with:
-# - a UR5e robot item
-# - a gripper/tool already defined
-# - block pick/place targets already existing or reachable via approach poses
-# Since we only have world coordinates for blocks, we create dynamic pick/place targets.
-
+# Locate a UR5 robot in the station (name may vary)
 robot = None
-# Try to locate the UR5e robot automatically
-for it in RDK.ItemList():
-    pass
+for name in ['UR5', 'UR5e', 'UR5_1', 'UR5e (UR5)', 'UR5e Robot']:
+    try:
+        itm = RDK.Item(name, ITEM_TYPE_ROBOT)
+        if itm.Valid():
+            robot = itm
+            break
+    except:
+        pass
+if robot is None:
+    robot = RDK.Item('', ITEM_TYPE_ROBOT)
 
-robot = RDK.Item('', ITEM_TYPE_ROBOT)
-if robot.Valid() == 0:
-    # Fallback: first robot item
-    robots = RDK.ItemList(ITEM_TYPE_ROBOT)
-    robot = RDK.Item(robots[0] if robots else '')
-
-if robot.Valid() == 0:
-    raise RuntimeError("UR5e robot item not found in the RoboDK station.")
-
-# Set run mode (simulation by default)
-try:
-    RDK.setRunMode(RUNMODE_SIMULATE)
-except Exception:
-    pass
-
-# Simulation speed
-try:
-    RDK.setSimulationSpeed(100)
-except Exception:
-    pass
-
-# Get world frame
-world = RDK.World()
-
-# Try to locate a gripper/tool (optional)
-# In many stations, the gripper tool is the active tool. We'll just rely on Move commands.
-
-# --------------------
-# Block coordinates (world)
-# --------------------
-# Input from prompt tool (world coordinates)
+# World (XY) positions provided
 red_xy = [19.456730487417932, 9.850884774922811]
 red_yaw_deg = 89.7196273803711
+
+green_xy = [162.23254021556767, 75.20602232885692]
+green_yaw_deg = 26.975744247436527 
+
 blue_xy = [81.30805217450195, 49.41455508328906]
 blue_yaw_deg = 47.37146377563476
-green_xy = [162.23254021556767, 75.20602232885692]
-green_yaw_deg = 26.975744247436527
 
-# We need Z heights. Since only XY are provided, we choose reasonable approach/pick/place heights.
-# Adjust these if your station uses different Z values.
-PICK_Z = 5.0
-APPROACH_Z = 20.0
-DROP_Z_1 = 0.0   # base placement Z for the bottom layer (blue)
-BLOCK_THICKNESS = 3.0
-DROP_Z_2 = DROP_Z_1 + BLOCK_THICKNESS
-DROP_Z_3 = DROP_Z_2 + BLOCK_THICKNESS
+# Workspace/stack assumptions (adjust to your setup if needed)
+TABLE_Z = 0.0
+APPROACH_Z = 80.0     # safe height above pick/place (mm)
+PICK_Z = 0.0          # pick Z at block top/center plane (mm)
 
-# --------------------
-# Helpers
-# --------------------
+BLOCK_THICKNESS = 20.0  # mm (adjust to match your scene)
+def pose_from_xy_yaw(x, y, z, yaw_deg):
+    """Pose with rotation about Z by yaw_deg and translation (x,y,z)."""
+    yaw = math.radians(yaw_deg)
+    Rz = [[math.cos(yaw), -math.sin(yaw), 0],
+          [math.sin(yaw),  math.cos(yaw), 0],
+          [0,              0,             1]]
+    return transl(x, y, z) * Mat(Rz[0][0], Rz[0][1], Rz[0][2], 0,
+                               Rz[1][0], Rz[1][1], Rz[1][2], 0,
+                               Rz[2][0], Rz[2][1], Rz[2][2], 0,
+                               0,         0,         0,         1)
 
-def yaw_to_rot(z_deg: float):
-    """Create a rotation matrix around Z (world frame)."""
-    z = math.radians(z_deg)
-    c, s = math.cos(z), math.sin(z)
-    # Robodk.Rot needs 3x3 or we can use Mat constructor
-    return [
-        [c, -s, 0],
-        [s,  c, 0],
-        [0,  0, 1],
-    ]
+# Pick poses (above + at)
+red_pick_app = pose_from_xy_yaw(red_xy[0], red_xy[1], APPROACH_Z, red_yaw_deg)
+red_pick     = pose_from_xy_yaw(red_xy[0], red_xy[1], PICK_Z, red_yaw_deg)
 
+green_pick_app = pose_from_xy_yaw(green_xy[0], green_xy[1], APPROACH_Z, green_yaw_deg)
+green_pick     = pose_from_xy_yaw(green_xy[0], green_xy[1], PICK_Z, green_yaw_deg)
 
-def pose_from_xy_z_yaw(x, y, z, yaw_deg):
-    r = yaw_to_rot(yaw_deg)
-    mat = Mat([
-        [r[0][0], r[0][1], r[0][2], x],
-        [r[1][0], r[1][1], r[1][2], y],
-        [r[2][0], r[2][1], r[2][2], z],
-        [0,       0,       0,       1],
-    ])
-    return mat
+blue_pick_app = pose_from_xy_yaw(blue_xy[0], blue_xy[1], APPROACH_Z, blue_yaw_deg)
+blue_pick     = pose_from_xy_yaw(blue_xy[0], blue_xy[1], PICK_Z, blue_yaw_deg)
 
+# Stacking target (base aligned to green XY)
+base_x, base_y = green_xy[0], green_xy[1]
+z_green_place = TABLE_Z + BLOCK_THICKNESS / 2.0
+z_red_place   = z_green_place + BLOCK_THICKNESS
+z_blue_place  = z_red_place + BLOCK_THICKNESS
 
-def make_target(pose, name: str):
-    # Create a target item (optional). We can just pass pose to MoveL/MoveJ.
-    return pose
+green_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, green_yaw_deg)
+green_place     = pose_from_xy_yaw(base_x, base_y, z_green_place, green_yaw_deg)
 
+red_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, red_yaw_deg)
+red_place     = pose_from_xy_yaw(base_x, base_y, z_red_place, red_yaw_deg)
 
-def move_pick(xy, yaw_deg):
-    x, y = xy
-    # Approach
-    robot.MoveJ(pose_from_xy_z_yaw(x, y, APPROACH_Z, yaw_deg))
-    # Descend
-    robot.MoveL(pose_from_xy_z_yaw(x, y, PICK_Z, yaw_deg))
-    # Close gripper placeholder (tool actuation depends on station I/O)
-    # In many stations, gripper is controlled via program logic, not in script.
+blue_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, blue_yaw_deg)
+blue_place     = pose_from_xy_yaw(base_x, base_y, z_blue_place, blue_yaw_deg)
 
+# Build program
+program = robot.ProgStart('Stack_R_on_G_then_B')
 
-def move_place(xy, yaw_deg, z_drop):
-    x, y = xy
-    # Approach
-    robot.MoveJ(pose_from_xy_z_yaw(x, y, APPROACH_Z, yaw_deg))
-    # Descend
-    robot.MoveL(pose_from_xy_z_yaw(x, y, z_drop, yaw_deg))
-    # Open gripper placeholder
+# ---- Pick & place GREEN (bottom) ----
+robot.MoveL(green_pick_app, False)
+robot.MoveL(green_pick, False)
+robot.MoveL(green_pick_app, False)               # TODO: close gripper here
+robot.MoveL(green_place_app, False)
+robot.MoveL(green_place, False)
+robot.MoveL(green_place_app, False)             # TODO: open gripper here
 
+# ---- Pick & place RED (middle) ----
+robot.MoveL(red_pick_app, False)
+robot.MoveL(red_pick, False)
+robot.MoveL(red_pick_app, False)                 # TODO: close gripper here
+robot.MoveL(red_place_app, False)
+robot.MoveL(red_place, False)
+robot.MoveL(red_place_app, False)               # TODO: open gripper here
 
-# --------------------
-# Stacking plan
-# --------------------
-# User order: red on top of blue, then green block.
-# Interpretation: bottom=blue, middle=red, top=green.
+# ---- Pick & place BLUE (top) ----
+robot.MoveL(blue_pick_app, False)
+robot.MoveL(blue_pick, False)
+robot.MoveL(blue_pick_app, False)                # TODO: close gripper here
+robot.MoveL(blue_place_app, False)
+robot.MoveL(blue_place, False)
+robot.MoveL(blue_place_app, False)              # TODO: open gripper here
 
-# 1) Pick BLUE and place at base (blue position). If blue is already there, robot will still perform pick/place.
-move_pick(blue_xy, blue_yaw_deg)
-move_place(blue_xy, blue_yaw_deg, DROP_Z_1)
+robot.ProgFinish(program)
 
-# 2) Pick RED and place on top of blue
-move_pick(red_xy, red_yaw_deg)
-move_place(blue_xy, red_yaw_deg, DROP_Z_2)
-
-# 3) Pick GREEN and place on top of red (top)
-move_pick(green_xy, green_yaw_deg)
-move_place(blue_xy, green_yaw_deg, DROP_Z_3)
-
-# Return home
-robot.MoveJ(pose_from_xy_z_yaw(blue_xy[0], blue_xy[1], APPROACH_Z, 0))
+# Uncomment to run immediately (if desired)
+# RDK.RunProgram(program, True)

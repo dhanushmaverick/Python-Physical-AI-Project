@@ -12,6 +12,12 @@ RAW_IMAGES_DIR = DATA_DIR / "raw_images"
 OBJ_SEGMENTATION_DIR = VISION_DIR / "object_segmentation"
 IMG_COORDINATE_DATA = OBJ_SEGMENTATION_DIR / "data"
 
+AI_DIR = SOURCE_CODE_DIR / "AI"
+AI_MOTION_PLAN_PATH = AI_DIR / "main_motion_plan.py"
+
+ROBODK_DIR = SOURCE_CODE_DIR / "ROboDK_pran"
+ROBO_DK_STATION_PATH = SOURCE_CODE_DIR / "RoboDKSIM.rdk"
+
 
 INTRINSICS_FILE = DATA_DIR/ "camera_intrinsics.npz"
 REPORT_FILE = DATA_DIR/ "calibration_report.json"
