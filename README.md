@@ -4,7 +4,7 @@
 `
 **Dependencies:**
 
-1. `pip install -r dependencies.txt`
+1. `python -m pip install -r dependencies.txt`
 2. `$env:OPENAI_API_KEY="your-api-key"`
 3. List of variables that are customised in the IM_pro function: 
     -> r_thresh_val = threshold value for creating bin img of red block.

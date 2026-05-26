@@ -3,3 +3,5 @@ venv/
 .venv/
 __pycache__/
 *.pyc
+# Environment variables
+source_code/AI/.env

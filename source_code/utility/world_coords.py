@@ -20,3 +20,13 @@ print("-"*20,"\n\n")
 
 def get_world_coords_string():
     return structured_string
+structured_string = 'Syntax: "color_block_position" : [x, y], "color_block_orientation" : theta, \n' +json.dumps(world_data)
+
+print("-"*20,"\n\n")
+print(structured_string)   #just for checking how it got printed ... change it however you need
+print("-"*20,"\n\n")
+
+#print("\n\n",structured_string)   #just for checking how it got printed ... change it however you need
+
+#print(len(structured_string))
+

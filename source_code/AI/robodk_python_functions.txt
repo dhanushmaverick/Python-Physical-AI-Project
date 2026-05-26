@@ -1,3 +1,4 @@
+"
 #Common imports
 from robodk.robolink import *
 from robodk.robomath import *
@@ -12,7 +13,7 @@ item = RDK.Item() #Access a particular item in the workspace
 #To open a Robodk station
 RDK.AddFile(path,file) #Opens the RoboDK file in roboDK
 # Robot Motion
-#For Targets
+# For Targets
 robot.MoveJ(target) #Move Joint move to a target
 robot.MoveL(target) # Move Linear move to a target
 
@@ -41,5 +42,5 @@ ITEM_TYPE_PROGRAM
 
 RUNMODE_SIMULATE
 RUNMODE_RUN_ROBOT
-
+"
 
