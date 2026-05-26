@@ -32,6 +32,10 @@ RUN_COMMANDS = {
         "name": "Image to world transformation",
         "cmd": [sys.executable, "-m", "source_code.vision.homography.run_image_to_world_transformation"],
     },
+    "w": {
+        "name": "calibrate",
+        "cmd": [sys.executable, "-m", "source_code.vision.camera.test_camera"],
+    },
     
 }
 
