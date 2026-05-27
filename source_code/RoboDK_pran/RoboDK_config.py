@@ -177,21 +177,22 @@ class RoboDKContext:
         obj.setParentStatic(self.world_frame)
         if program.Valid():
             program.RunProgram()
+            program.WaitFinished()
+            
         else:
             print("[WARN] HANDE_OPEN_SIM program not found.")
 
     def close_gripper(self,color):
-        program = self.rdk.Item("HANDE_CLOSE_SIM")
+        program = self.rdk.Item("HANDE_OPEN_SIM_20mm")
         tool = self.rdk.Item("gripper_tcp")
         obj = self.blocks.get(color)
         obj.setParentStatic(tool)
         if program.Valid():
             program.RunProgram()
+            program.WaitFinished()
         else:
             print("[WARN] HANDE_CLOSE_SIM program not found.")
-    def waitMove(self):
-        while self.robot.Busy():
-            self.rdk.pause(5) 
+    
 
     # ------------------------------------------------------------
     # Home
