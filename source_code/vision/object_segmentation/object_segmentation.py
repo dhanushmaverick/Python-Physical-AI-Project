@@ -37,7 +37,7 @@ def I_pro(im):
                 if(len(contours)>0):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red;
-                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
+                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2))
         #visualise
         
         for blob in m_red:
@@ -74,7 +74,7 @@ def I_pro(im):
                 if(len(contours)>0):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red
-                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
+                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2))
         #visualise
         
         for blob in m_green:
@@ -111,7 +111,7 @@ def I_pro(im):
                 if(len(contours)>0 ):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red
-                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
+                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2))
         #visualise
         
         for blob in m_blue:
