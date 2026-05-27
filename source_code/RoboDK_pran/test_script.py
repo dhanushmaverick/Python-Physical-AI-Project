@@ -43,7 +43,7 @@ def run_motion(ctx):
     # Stack location: use green block as the base location
     stack_x = green_x
     stack_y = green_y
-    stack_orient = green_yaw;
+    stack_orient = green_yaw
     green_place_z = place_base_z
     red_place_z = place_base_z + block_thickness
     blue_place_z = place_base_z + block_thickness * 2.0

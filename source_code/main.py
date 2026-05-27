@@ -3,7 +3,7 @@
 import subprocess
 import sys
 import time
-from source_code.vision.Robodk.robodk_init import Robodk_init
+from source_code.RoboDK_pran import RoboDK_config
 RUN_COMMANDS = {
     "1": {
         "name": "Test camera",
@@ -27,7 +27,7 @@ RUN_COMMANDS = {
     },
     "6": {
         "name": "RoboDK Initialization",
-        "cmd": [sys.executable, "-m", "source_code.vision.Robodk.robodk_init"],
+        "cmd": [sys.executable, "-m", "source_code.RoboDK_pran.run_AI_script"],
     },
     "7": {
         "name": "Object segmentation",
@@ -73,19 +73,16 @@ def main():
             print("Invalid choice.")
 
 def run_command(choice):
-    if(choice=="6"):
-        RDK = Robodk_init()
-        print("RoboDK station initialized.")
-        time.sleep(3)
-    else:
-        command = RUN_COMMANDS[choice]
+    print(f"\nRunning: {RUN_COMMANDS[choice]['name']}")
+    time.sleep(3)
+    command = RUN_COMMANDS[choice]
 
-        print(f"\nRunning: {command['name']}")
-        print("Command:", " ".join(command["cmd"]))
+    print(f"\nRunning: {command['name']}")
+    print("Command:", " ".join(command["cmd"]))
 
-        subprocess.run(command["cmd"])
-        print("-"*20,"\n\n" ,f"Finished Running: {command['name']}")
-        time.sleep(3)
+    subprocess.run(command["cmd"])
+    print("-"*20,"\n\n" ,f"Finished Running: {command['name']}")
+    time.sleep(3)
 
 
 
