@@ -23,7 +23,7 @@ class RoboDKContext:
         print(ROBO_DK_STATION_PATH)
         self.rdk.AddFile(str(ROBO_DK_STATION_PATH)) #this function opens the specified RoboDK station file. If the file is not found, an error will be raised.
 
-        self.rdk.setSimulationSpeed(1)
+        self.rdk.setSimulationSpeed(0.5)
         # -----------------------------
         # Main RoboDK items
         # -----------------------------
@@ -56,8 +56,8 @@ class RoboDKContext:
         # AI can use these values
         # -----------------------------
         self.approach_z = 150.0
-        self.pick_z = 40.0
-        self.place_base_z = 40.0
+        self.pick_z = 10.0
+        self.place_base_z = 10.0
         self.block_thickness = 20.0
 
         print("[SUCCESS] RoboDK context ready.")
@@ -171,21 +171,27 @@ class RoboDKContext:
     # ------------------------------------------------------------
     # Gripper programs
     # ------------------------------------------------------------
-    def open_gripper(self):
-        program = self.rdk.Item("HandE_OPEN_SIM")
-
+    def open_gripper(self,color):
+        program = self.rdk.Item("HANDE_OPEN_SIM")
+        obj = self.blocks.get(color)
+        obj.setParentStatic(self.world_frame)
         if program.Valid():
             program.RunProgram()
         else:
-            print("[WARN] HandE_OPEN_SIM program not found.")
+            print("[WARN] HANDE_OPEN_SIM program not found.")
 
-    def close_gripper(self):
-        program = self.rdk.Item("HandE_CLOSE_SIM")
-
+    def close_gripper(self,color):
+        program = self.rdk.Item("HANDE_CLOSE_SIM")
+        tool = self.rdk.Item("gripper_tcp")
+        obj = self.blocks.get(color)
+        obj.setParentStatic(tool)
         if program.Valid():
             program.RunProgram()
         else:
-            print("[WARN] HandE_CLOSE_SIM program not found.")
+            print("[WARN] HANDE_CLOSE_SIM program not found.")
+    def waitMove(self):
+        while self.robot.Busy():
+            self.rdk.pause(5) 
 
     # ------------------------------------------------------------
     # Home

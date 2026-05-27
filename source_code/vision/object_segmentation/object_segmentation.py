@@ -1,6 +1,10 @@
 """
 RUN Command: python -m source_code.vision.object_segmentation.object_segmentation
 """
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import cv2
 import numpy as np
 from collections import namedtuple
@@ -33,7 +37,7 @@ def I_pro(im):
                 if(len(contours)>0):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red;
-                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180),a/2,b/2))
+                    m_red.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
         #visualise
         
         for blob in m_red:
@@ -70,7 +74,7 @@ def I_pro(im):
                 if(len(contours)>0):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red
-                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2))
+                    m_green.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
         #visualise
         
         for blob in m_green:
@@ -107,7 +111,7 @@ def I_pro(im):
                 if(len(contours)>0 ):
                     ellipse_red = cv2.fitEllipse(contours[0])
                     (ex,ey),(a,b),theta = ellipse_red
-                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,theta*math.pi/180,a/2,b/2))
+                    m_blue.append(  BlobFeature(i,area,uc,vc,bbox,(theta*math.pi/180)+(math.pi/2),a/2,b/2))
         #visualise
         
         for blob in m_blue:
@@ -142,7 +146,7 @@ def I_pro(im):
             "blue_block_position": m_blue_center.tolist(),
             "blue_block_orientation": m_blue[0].theta*(180/math.pi),
         }
-    with open("object_segmentation/data/Pose.json",'w') as file:
+    with open(OBJ_SEGMENTATION_DIR / "data" / "Pose.json",'w') as file:
         json.dump(processed_data,file,indent=3);
 
 def main():

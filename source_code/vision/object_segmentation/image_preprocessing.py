@@ -6,8 +6,8 @@ from source_code.utility.paths import OBJ_SEGMENTATION_DIR
 
 def threshold_image_RGB(im):
 #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
-    im = cv2.imread(im)
-    thresh_vals = [0.45, 0.4, 0.55];
+    #im = cv2.imread(im)
+    thresh_vals = [0.45, 0.39, 0.55];
     B, G, R = cv2.split(im)
 
     R = R.astype(np.float32)
