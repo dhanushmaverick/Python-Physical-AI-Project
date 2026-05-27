@@ -50,12 +50,12 @@ def run_motion(ctx):
     # ------------------------------------------------------------
     # Pick GREEN
     # ------------------------------------------------------------
-    ctx.open_gripper()
+    ctx.open_gripper("green")
 
     robot.MoveJ(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, pick_z, green_yaw))
 
-    ctx.close_gripper()
+    ctx.close_gripper("green")
 
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
 
@@ -65,19 +65,19 @@ def run_motion(ctx):
     robot.MoveJ(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, green_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, green_place_z, green_yaw))
 
-    ctx.open_gripper()
+    ctx.open_gripper("green")
 
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, green_yaw))
 
     # ------------------------------------------------------------
     # Pick RED
     # ------------------------------------------------------------
-    ctx.open_gripper()
+    ctx.open_gripper("red")
 
     robot.MoveJ(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, pick_z, red_yaw))
 
-    ctx.close_gripper()
+    ctx.close_gripper("red")
 
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
 
@@ -87,19 +87,19 @@ def run_motion(ctx):
     robot.MoveJ(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, red_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, red_place_z, red_yaw))
 
-    ctx.open_gripper()
+    ctx.open_gripper("red")
 
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, red_yaw))
 
     # ------------------------------------------------------------
     # Pick BLUE
     # ------------------------------------------------------------
-    ctx.open_gripper()
+    ctx.open_gripper("blue")
 
     robot.MoveJ(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, pick_z, blue_yaw))
 
-    ctx.close_gripper()
+    ctx.close_gripper("blue")
 
     robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
 
@@ -109,7 +109,7 @@ def run_motion(ctx):
     robot.MoveJ(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, blue_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, blue_place_z, blue_yaw))
 
-    ctx.open_gripper()
+    ctx.open_gripper("blue")
 
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, blue_yaw))
 

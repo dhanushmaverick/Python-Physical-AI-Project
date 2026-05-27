@@ -177,21 +177,20 @@ class RoboDKContext:
         obj.setParentStatic(self.world_frame)
         if program.Valid():
             program.RunProgram()
+            program.WaitFinished()  # Wait until the program finishes before proceeding # the parameter is a timeout in seconds (50 seconds in this case)
         else:
             print("[WARN] HANDE_OPEN_SIM program not found.")
 
     def close_gripper(self,color):
-        program = self.rdk.Item("HANDE_CLOSE_SIM")
+        program = self.rdk.Item("HandE_OPEN_SIM_20mm")        
         tool = self.rdk.Item("gripper_tcp")
         obj = self.blocks.get(color)
         obj.setParentStatic(tool)
         if program.Valid():
             program.RunProgram()
+            program.WaitFinished()  # Wait until the program finishes before proceeding
         else:
-            print("[WARN] HANDE_CLOSE_SIM program not found.")
-    def waitMove(self):
-        while self.robot.Busy():
-            self.rdk.pause(5) 
+            print("[WARN] HandE_OPEN_SIM_20mm program not found.")
 
     # ------------------------------------------------------------
     # Home
@@ -200,7 +199,7 @@ class RoboDKContext:
         if self.home.Valid():
             print("[INFO] Moving robot to HOME...")
             self.robot.MoveJ(self.home)
-            self.rdk.Finish()
+            #self.rdk.Finish()
             print("[INFO] Moved robot to HOME...")
         else:
             print("[WARN] HOME target not found. Skipping go_home().")
