@@ -1,3 +1,4 @@
+
 def run_motion(ctx):
     """
     Test AI-generated motion plan.
@@ -20,15 +21,15 @@ def run_motion(ctx):
     # ------------------------------------------------------------
     red_x = 19.924
     red_y = 9.888
-    red_yaw = 181.0783
+    red_yaw = 91.0783+90
 
     green_x = 161.474
     green_y = 75.212
-    green_yaw = 104.3145
+    green_yaw = 14.3145+90
 
     blue_x = 81.298
     blue_y = 49.511
-    blue_yaw = 142.3926
+    blue_yaw = 52.3926+90
 
     # ------------------------------------------------------------
     # Use Z values from RoboDKContext
@@ -42,7 +43,7 @@ def run_motion(ctx):
     # Stack location: use green block as the base location
     stack_x = green_x
     stack_y = green_y
-
+    stack_orient = green_yaw;
     green_place_z = place_base_z
     red_place_z = place_base_z + block_thickness
     blue_place_z = place_base_z + block_thickness * 2.0
@@ -53,75 +54,73 @@ def run_motion(ctx):
     ctx.open_gripper("green")
 
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, pick_z, green_yaw))
-    ctx.waitMove();
+    
     ctx.close_gripper("green")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
-    ctx.waitMove();
+   
     # ------------------------------------------------------------
     # Place GREEN as bottom block
     # ------------------------------------------------------------
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, green_place_z, stack_orient))
-    ctx.waitMove();
+    
     ctx.open_gripper("green")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+    
     # ------------------------------------------------------------
     # Pick RED
     # ------------------------------------------------------------
     ctx.open_gripper("red")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, pick_z, red_yaw))
-    ctx.waitMove();
+    
     ctx.close_gripper("red")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
-    ctx.waitMove();
+    
     # ------------------------------------------------------------
     # Place RED on GREEN
     # ------------------------------------------------------------
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient  ))
+    
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, red_place_z, stack_orient))
-    ctx.waitMove();
+    
     ctx.open_gripper("red")
-    ctx.waitMove();
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+   
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient ))
+    
     # ------------------------------------------------------------
     # Pick BLUE
     # ------------------------------------------------------------
     ctx.open_gripper("blue")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, pick_z, blue_yaw))
-    ctx.waitMove();
+    
     ctx.close_gripper("blue")
-    ctx.waitMove();
+    
     robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
-    ctx.waitMove();
+    
     # ------------------------------------------------------------
     # Place BLUE on RED
     # ------------------------------------------------------------
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient  ))
+    
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, blue_place_z, stack_orient))
-    ctx.waitMove();
+    
     ctx.open_gripper("blue")
-    ctx.waitMove();
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    ctx.waitMove();
+    
     # ------------------------------------------------------------
     # Return home
     # ------------------------------------------------------------
     ctx.go_home()
    
-run_motion(RoboDKContext())
