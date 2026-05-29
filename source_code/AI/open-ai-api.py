@@ -1,3 +1,16 @@
+""" 
+    This should be the new workflow : 
+    read the roboDK context from simulation 
+    read the world coordinates of the blocks from the vision system
+    pass the list of commands that can be used 
+    pass through previously generated code 
+    generate a new code based on the current context and the user query
+
+"""
+
+
+
+
 # Run Command: python -m source_code.AI.open-ai-api
 
 from dotenv import load_dotenv
@@ -35,6 +48,7 @@ agent = create_agent(
 
     Return as code within the file source_code/AI/main_motion_plan.py and nothing else.
     """,
+
     tools=tools,
     checkpointer=InMemorySaver(),
 )
