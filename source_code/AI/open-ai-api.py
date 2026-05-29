@@ -40,8 +40,8 @@ agent = create_agent(
 )
 
 while True:
-    query = input("What's your query: ")
-    if query.lower() == "exit":
+    query = input("What's your query:  (exit/q to exit) ")
+    if query.lower() == "exit" or query.lower() == "q":
         break
 
     response = agent.invoke(
