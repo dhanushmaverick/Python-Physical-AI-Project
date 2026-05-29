@@ -2,27 +2,29 @@ from source_code.main import *
 import tkinter as tk
 from tkinter import ttk
 import cv2
-import base64
 
-# ---------------- TESLA THEME ----------------
-BG = "#000000"
-SIDEBAR = "#050505"
-CARD = "#111111"
-ACCENT = "#e31937"
-TEXT = "#ffffff"
-MUTED = "#a3a3a3"
 
-# ---------------- APP STATE ----------------
+# =====================================================
+# IMAGE SETUP
+# =====================================================
+cv2.imwrite(
+    "source_code/vision/object_segmentation/Img.png",
+    cv2.resize(
+        cv2.imread("source_code/vision/object_segmentation/Img.jpeg"),
+        (300, 300)
+    )
+)
+
+
 def show_page(page):
     global current_page
     page.tkraise()
     current_page = page
 
+
 def exit_app():
     root.destroy()
 
-def change_text(label, new_text):
-    label.config(text=new_text)
 
 def back():
     i = page_list.index(current_page)
@@ -31,229 +33,352 @@ def back():
     else:
         show_page(HomePage)
 
-# ---------------- ROOT ----------------
+
+# =====================================================
+# ROOT
+# =====================================================
 root = tk.Tk()
 root.title("Physical AI Simulator")
-root.geometry("900x520")
-root.configure(bg=BG)
+root.geometry("1300x850")
+root.configure(bg="#47b5e9")
+#root.attributes("-fullscreen", True)
+root.state('zoomed')  # Start maximized
 
-root.grid_rowconfigure(0, weight=1)
-root.grid_columnconfigure(1, weight=1)
+container = tk.Frame(root, bg="#1e1e2e")
+container.pack(fill="both", expand=True)
 
-# ---------------- SIDEBAR ----------------
-sidebar = tk.Frame(root, bg=SIDEBAR, width=160)
-sidebar.grid(row=0, column=0, sticky="ns")
+container.grid_rowconfigure(0, weight=1)
+container.grid_columnconfigure(0, weight=1)
 
-# ---------------- CENTER WRAPPER (CENTERED CONTENT FIX) ----------------
-center_wrapper = tk.Frame(root, bg=BG)
-center_wrapper.grid(row=0, column=1, sticky="nsew")
 
-center_wrapper.grid_rowconfigure(0, weight=1)
-center_wrapper.grid_columnconfigure(0, weight=1)
+# =====================================================
+# PAGES
+# =====================================================
+HomePage = tk.Frame(container, bg="#47b5e9")
+HomePage.grid(row=0, column=0, sticky="nsew")
 
-container = tk.Frame(center_wrapper, bg=BG)
-container.place(relx=0.5, rely=0.5, anchor="center")
+page1 = tk.Frame(container, bg="#47b5e9")
+page1.grid(row=0, column=0, sticky="nsew")
 
-# ---------------- PAGES ----------------
-HomePage = tk.Frame(container, bg=BG)
-page1 = tk.Frame(container, bg=BG)
-page2 = tk.Frame(container, bg=BG)
-page3 = tk.Frame(container, bg=BG)
-End_page = tk.Frame(container, bg=BG)
+page2 = tk.Frame(container, bg="#47b5e9")
+page2.grid(row=0, column=0, sticky="nsew")
 
-for p in (HomePage, page1, page2, page3, End_page):
-    p.grid(row=0, column=0, sticky="nsew")
+page3 = tk.Frame(container, bg="#47b5e9")
+page3.grid(row=0, column=0, sticky="nsew")
+
+End_page = tk.Frame(container, bg="#47b5e9")
+End_page.grid(row=0, column=0, sticky="nsew")
 
 current_page = HomePage
 page_list = [HomePage, page1, page2, page3]
 
-# ---------------- TESLA BUTTON (BIG + HOVER EFFECT) ----------------
-def tbutton(parent, text, command, bg=CARD):
-    b = tk.Button(
-        parent,
-        text=text,
-        command=command,
-        font=("Helvetica Neue", 14, "bold"),
-        fg=TEXT,
-        bg=bg,
-        activebackground=ACCENT,
-        activeforeground="white",
-        relief="flat",
-        bd=0,
-        padx=28,
-        pady=18,
-        cursor="hand2"
-    )
 
-    def on_enter(e):
-        b.config(bg=ACCENT)
+# =====================================================
+# NAV BUTTONS (ONLY SIZE CHANGED)
+# =====================================================
+tk.Button(
+    root,
+    text="Back",
+    command=back,
+    font=("Segoe UI", 18, "bold"),   # bigger
+    bg="#374151",
+    fg="white",
+    padx=35,                        # bigger
+    pady=18                        # bigger
+).pack(side="left", padx=10)
 
-    def on_leave(e):
-        b.config(bg=bg)
+tk.Button(
+    root,
+    text="Exit",
+    command=exit_app,
+    font=("Segoe UI", 18, "bold"),   # bigger
+    bg="#ef4444",
+    fg="white",
+    padx=35,
+    pady=18
+).pack(side="bottom", pady=10)
 
-    b.bind("<Enter>", on_enter)
-    b.bind("<Leave>", on_leave)
 
-    return b
-
-# ---------------- SIDEBAR ----------------
-tk.Label(
-    sidebar,
-    text="CONTROL",
-    font=("Helvetica Neue", 12, "bold"),
-    fg=MUTED,
-    bg=SIDEBAR
-).pack(pady=20)
-
-tbutton(sidebar, "Back", back, SIDEBAR).pack(pady=5)
-tbutton(sidebar, "Exit", exit_app, SIDEBAR).pack(pady=5)
-
-# ---------------- HOME PAGE ----------------
-tk.Label(
-    HomePage,
-    text="Home Page",
-    font=("Helvetica Neue", 28, "bold"),
-    fg=TEXT,
-    bg=BG
-).pack(pady=40)
-
-tbutton(
-    HomePage,
-    "Start",
-    lambda: show_page(page1),
-    CARD
-).pack(pady=20)
-
+# =====================================================
+# IMAGES
+# =====================================================
 cover_image = tk.PhotoImage(file="source_code/utility/img.png")
-tk.Label(HomePage, image=cover_image, bg=BG).pack(pady=20)
+img_used = tk.PhotoImage(file="source_code/vision/object_segmentation/Img.png")
 
-# ---------------- PAGE 1 ----------------
+
+# =====================================================
+# CENTERING HELPER
+# =====================================================
+def center_frame(parent):
+    frame = tk.Frame(parent, bg=parent["bg"])
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    return frame
+
+
+# =====================================================
+# HOME PAGE
+# =====================================================
+home_frame = center_frame(HomePage)
+
 tk.Label(
-    page1,
-    text="Is this a new camera or no?",
-    font=("Helvetica Neue", 14),
-    fg=MUTED,
-    bg=BG
-).pack(pady=15)
-
-tbutton(
-    page1,
-    "Yes and clear calibration images",
-    lambda: {run_new_camera_setup(True), show_page(page3)},
-    CARD
-).pack(pady=12)
-
-tbutton(
-    page1,
-    "Yes but keep existing calibration images",
-    lambda: {run_new_camera_setup(False), show_page(page3)},
-    CARD
-).pack(pady=12)
-
-tbutton(
-    page1,
-    "No",
-    lambda: show_page(page2),
-    CARD
-).pack(pady=12)
-
-# ---------------- PAGE 2 ----------------
-tk.Label(
-    page2,
-    text="Was the camera or workspace moved?",
-    font=("Helvetica Neue", 14),
-    fg=MUTED,
-    bg=BG
-).pack(pady=20)
-
-tbutton(
-    page2,
-    "Yes",
-    lambda: {run_workspace_moved_setup(), show_page(page3)},
-    ACCENT
-).pack(pady=20)
-
-tbutton(
-    page2,
-    "No",
-    lambda: show_page(page3),
-    CARD
-).pack(pady=12)
-
-# ---------------- PAGE 3 ----------------
-tk.Label(
-    page3,
-    text="What do you want to do now?",
-    font=("Helvetica Neue", 16, "bold"),
-    fg=TEXT,
-    bg=BG
+    home_frame,
+    text="Welcome to Physical AI enabled\n Vision Pick and Place Simulator",
+    font=("Segoe UI", 34, "bold"),
+    bg="#1e1e2e",
+    fg="white",
+    justify="center"
 ).pack(pady=30)
 
-tbutton(
-    page3,
-    "1. Find objects first\nThen prompt the task",
-    lambda: {
-        print("\nOkay. I will find the objects first."),
-        run_multiple_cmds(["7", "8"]),
-        print("\nNow I will start the simulation."),
-        run_command("6"),
-        show_page(End_page)
-    },
-    CARD
-).pack(pady=12)
 
-tbutton(
-    page3,
-    "2. Directly prompt the task",
-    lambda: {
-        print("\nOkay. I will directly start the simulation."),
-        run_command("6"),
-        show_page(End_page)
-    },
-    ACCENT
-).pack(pady=12)
-
-# ---------------- END PAGE ----------------
 tk.Label(
-    End_page,
-    text="Simulation Complete! What do you want to do next?",
-    font=("Helvetica Neue", 20, "bold"),
-    fg=ACCENT,
-    bg=BG
+    HomePage,
+    image=cover_image,
+    bg="#1e1e2e"
+).place(relx=0.95, rely=0.05, anchor="ne")
+tk.Label(
+    page1,
+    image=cover_image,
+    bg="#1e1e2e"
+).place(relx=0.95, rely=0.05, anchor="ne")
+
+tk.Button(
+    home_frame,
+    text="START",
+    command=lambda: show_page(page1),
+    font=("Segoe UI", 26, "bold"),   # bigger ONLY
+    bg="#22c55e",
+    fg="white",
+    padx=80,                        # bigger ONLY
+    pady=30                        # bigger ONLY
+).pack(pady=40)
+
+
+# =====================================================
+# PAGE 1
+# =====================================================
+page1_frame = center_frame(page1)
+
+
+tk.Label(
+    page1_frame,
+    text="Camera and Workspace Setup",
+    font=("Segoe UI", 28, "bold"),
+    bg="#282a36",
+    fg="white"
 ).pack(pady=20)
 
+
 tk.Label(
-    End_page,
-    text="All pipeline steps executed successfully.\nSystem is safe to shutdown.",
-    font=("Helvetica Neue", 12),
-    fg=MUTED,
-    bg=BG
-).pack()
+    page1,
+    image=img_used,
+    bg="#282a36"
+).place(relx=0.05, rely=0.1, anchor="nw")
 
-log_box = tk.Text(
-    End_page,
-    height=8,
-    bg="#0a0a0a",
+
+tk.Label(
+    page1_frame,
+    text="Was the camera or workspace moved?",
+    font=("Segoe UI", 20),
+    bg="#282a36",
+    fg="#dcdcdc"
+).pack(pady=20)
+
+
+tk.Button(
+    page1_frame,
+    text="YES",
+    font=("Segoe UI", 22, "bold"),   # bigger only
+    bg="#ff6584",
     fg="white",
-    font=("Consolas", 10),
-    relief="flat",
-    bd=0
+    padx=80,
+    pady=30,
+    command=lambda: {run_workspace_moved_setup(), show_page(page3)}
+).pack(pady=10)
+
+
+tk.Button(
+    page1_frame,
+    text="NO",
+    font=("Segoe UI", 22, "bold"),
+    bg="#ff6584",
+    fg="white",
+    padx=80,
+    pady=30,
+    command=lambda: show_page(page3)
+).pack(pady=10)
+
+
+tk.Button(
+    page1_frame,
+    text="CALIBRATE CAMERA",
+    font=("Segoe UI", 22, "bold"),
+    bg="#2563eb",
+    fg="white",
+    padx=80,
+    pady=30,
+    command=lambda: show_page(page2)
+).pack(pady=20)
+
+
+tk.Label(
+    page1_frame,
+    text="Enter the order of blocks to be stacked",
+    font=("Segoe UI", 18),
+    bg="#282a36",
+    fg="#dcdcdc"
+).pack(pady=10)
+
+
+input_entry = tk.Entry(
+    page1_frame,
+    font=("Segoe UI", 18),
+    bg="#1e1e2e",
+    fg="white",
+    width=30
 )
-log_box.pack(pady=15)
+input_entry.pack(ipady=10, pady=10)
 
-log_box.insert("end", "✓ Camera calibrated\n")
-log_box.insert("end", "✓ Homography computed\n")
-log_box.insert("end", "✓ Object detection complete\n")
-log_box.insert("end", "✓ RoboDK simulation generated\n")
-log_box.config(state="disabled")
 
-tbutton(
-    End_page,
-    "RESTART",
-    lambda: show_page(HomePage),
-    ACCENT
-).pack()
+tk.Button(
+    page1_frame,
+    text="SUBMIT",
+    font=("Segoe UI", 22, "bold"),
+    bg="#22c55e",
+    fg="white",
+    padx=80,
+    pady=30,
+    command=lambda: {
+        print(input_entry.get()),
+        show_page(page3)
+    }
+).pack(pady=20)
 
-# ---------------- START ----------------
+
+# =====================================================
+# PAGE 2 (TEXT UNCHANGED)
+# =====================================================
+page2_frame = center_frame(page2)
+
+tk.Label(
+    page2_frame,
+    text="Is this a new camera or no?",
+    font=("Segoe UI", 22, "bold"),
+    bg="#1e1e2e",
+    fg="white"
+).pack(pady=40)
+
+
+tk.Button(
+    page2_frame,
+    text="YES and clear calibration images",
+    font=("Segoe UI", 18, "bold"),
+    bg="#ff6584",
+    fg="white",
+    padx=60,
+    pady=25,
+    command=lambda: {run_new_camera_setup(True), show_page(page3)}
+).pack(pady=15)
+
+
+tk.Button(
+    page2_frame,
+    text="YES but keep existing calibration images",
+    font=("Segoe UI", 18, "bold"),
+    bg="#ff6584",
+    fg="white",
+    padx=60,
+    pady=25,
+    command=lambda: {run_new_camera_setup(False), show_page(page3)}
+).pack(pady=15)
+
+
+tk.Button(
+    page2_frame,
+    text="No",
+    font=("Segoe UI", 18, "bold"),
+    bg="#ff6584",
+    fg="white",
+    padx=60,
+    pady=25,
+    command=lambda: show_page(page3)
+).pack(pady=15)
+
+
+# =====================================================
+# PAGE 3 (UNCHANGED TEXT)
+# =====================================================
+page3_frame = center_frame(page3)
+
+tk.Label(
+    page3_frame,
+    text="What do you want to do now?",
+    font=("Segoe UI", 24, "bold"),
+    fg="white",
+    bg="#282a36"
+).pack(pady=40)
+
+
+tk.Button(
+    page3_frame,
+    text="Find objects first,\n then Prompt the task?",
+    font=("Segoe UI", 18, "bold"),
+    bg="#1f2937",
+    fg="white",
+    width=35,
+    height=4,
+    command=lambda: {
+        run_multiple_cmds(["7", "8"]),
+        query(input_entry.get()),
+        run_command("6"),
+        show_page(End_page)
+    }
+).pack(pady=20)
+
+
+tk.Button(
+    page3_frame,
+    text="Directly Prompt the task?",
+    font=("Segoe UI", 18, "bold"),
+    bg="#2563eb",
+    fg="white",
+    width=35,
+    height=4,
+    command=lambda: {
+        query(input_entry.get()),
+        run_command("6"),
+        show_page(End_page)
+    }
+).pack(pady=20)
+
+
+# =====================================================
+# END PAGE (UNCHANGED)
+# =====================================================
+end_frame = center_frame(End_page)
+
+tk.Label(
+    end_frame,
+    text="Simulation Complete!",
+    font=("Segoe UI", 28, "bold"),
+    fg="#22c55e",
+    bg="#282a36"
+).pack(pady=30)
+
+
+tk.Button(
+    end_frame,
+    text="RESTART",
+    font=("Segoe UI", 18, "bold"),
+    bg="#2563eb",
+    fg="white",
+    padx=50,
+    pady=20,
+    command=lambda: show_page(HomePage)
+).pack(pady=20)
+
+
+# =====================================================
+# START
+# =====================================================
 show_page(HomePage)
 root.mainloop()
