@@ -1,5 +1,5 @@
 #run command:
-#       python -m source_code.RoboDK_pran.run_AI_script
+#       python -m source_code.simulation.run_AI_script
 
 
 import importlib.util

@@ -26,7 +26,7 @@ RUN_COMMANDS = {
     },
     "6": {
         "name": "RoboDK Simulation",
-        "cmd": [sys.executable, "-m", "source_code.RoboDK_pran.run_AI_script"],
+        "cmd": [sys.executable, "-m", "source_code.simulation.run_AI_script"],
     },
     "7": {
         "name": "Object segmentation",

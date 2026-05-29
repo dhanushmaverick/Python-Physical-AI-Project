@@ -1,5 +1,5 @@
 #run command :
-#       python -m source_code.RoboDK_pran.RoboDK_config
+#       python -m source_code.simulation.RoboDK_config
 
 import json
 import math

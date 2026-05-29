@@ -4,7 +4,9 @@
     read the world coordinates of the blocks from the vision system
     pass the list of commands that can be used 
     pass through previously generated code 
-    generate a new code based on the current context and the user query
+    generate a new motion plan based on the current context and the user query it should be of the format:
+        def run_motion(ctx):
+        ...
 
 """
 
