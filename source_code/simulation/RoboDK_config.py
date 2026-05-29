@@ -5,6 +5,8 @@ import json
 import math
 from robodk.robolink import Robolink, ITEM_TYPE_ROBOT
 from robodk.robomath import *
+import time
+
 
 from source_code.utility.paths import ROBO_DK_STATION_PATH
 
@@ -18,6 +20,7 @@ class RoboDKContext:
     #if the default installation path is not used, the path to RoboDK should be added to the system PATH variable and the RoboDK API should be installed via pip.
     # USE WITH CAUTION : rdk = Robolink(robodk_path="C:/bin/RoboDK/bin/RoboDK.exe") 
 
+        time.sleep(10)  # give RoboDK time
 
         print("[INFO] Opening RoboDK station:")
         print(ROBO_DK_STATION_PATH)

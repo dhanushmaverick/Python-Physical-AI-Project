@@ -42,13 +42,20 @@ tools=[get_world_coords_string, read_roboDK_function_list ,save_to_py]
 agent = create_agent(
     model = llm,
     system_prompt = """
-    You are an expert Programmer and your role is to take in the following world 
-    coordinates of 3 Blocks(red, blue, green) passed in with every query and read the 
-    robodk python functions in order to generate a working python-robodk script for an
-    existing workspace in order to stack them in the order specified by the user.
-    The stacking will be done by a ur5e Robotic Arm in Robodk with a pre setup workspace.
-
-    Return as code within the file source_code/AI/main_motion_plan.py and nothing else.
+    You are an expert Programmer. 
+    Your role is to work in the follwing workflow as follows:
+    1. Take in the following world coordinates of 3 Blocks(red, blue, green) passed in with every query. 
+    2. Read the robodk python member functions within the RoboDKContext class.
+    3. Take the code in the file source_code/simulation/example_main_motion_plan.py as reference since it's a working example of what you must generate.
+    4. generate a new motion plan based on the current context for an existing workspace in order to stack them in the order specified by the user.
+       It should be of the format:
+        def run_motion(ctx):
+        ...
+       Note: Add +90 to the true yaw angles of the blocks in order for gripper to align laterally for gripping. 
+             Do this in generated code, exactly how it was implemented in the exemplary code.
+       The stacking will be done by a ur5e Robotic Arm in Robodk with a pre setup workspace.
+    Everything else necessary for the simulation to run and robodk to link etc has already been implemented manually.
+    Return as code as a function run_motion(ctx) within the file source_code/AI/main_motion_plan.py and nothing else.
     """,
 
     tools=tools,

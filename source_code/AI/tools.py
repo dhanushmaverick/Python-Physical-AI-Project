@@ -18,6 +18,6 @@ def get_world_coords_string()->str:
 @tool
 def read_roboDK_function_list()->str:
     """String containing python-RoboDK functions which are to be used in order to generate code. Do not use any other roboDK functions except these."""
-    with open("source_code/AI/robodk_python_functions.txt", "r") as f:
-        commands = f.read()
-        return commands
+    with open("source_code/simulation/RoboDK_config.py", "r") as f:
+        return f.read()
+
