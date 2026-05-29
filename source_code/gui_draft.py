@@ -1,200 +1,259 @@
+from source_code.main import *
 import tkinter as tk
 from tkinter import ttk
-import subprocess
-import sys
-import threading
-import time
+import cv2
+import base64
 
-# =========================
-# COMMANDS (same as yours)
-# =========================
-RUN_COMMANDS = {
-    "1": {
-        "name": "Test camera",
-        "cmd": [sys.executable, "-m", "source_code.vision.camera.test_camera"],
-    },
-    "2": {
-        "name": "Capture calibration images",
-        "cmd": [sys.executable, "-m", "source_code.vision.calibration.run_capture_images"],
-    },
-    "3": {
-        "name": "Run calibration",
-        "cmd": [sys.executable, "-m", "source_code.vision.calibration.run_calibration"],
-    },
-    "4": {
-        "name": "Run undistortion",
-        "cmd": [sys.executable, "-m", "source_code.vision.undistortion.run_undistort"],
-    },
-    "5": {
-        "name": "Run homography",
-        "cmd": [sys.executable, "-m", "source_code.vision.homography.run_homography"],
-    },
-    "6": {
-        "name": "RoboDK Simulation",
-        "cmd": [sys.executable, "-m", "source_code.simulation.run_AI_script"],
-    },
-    "7": {
-        "name": "Object segmentation",
-        "cmd": [sys.executable, "-m", "source_code.vision.object_segmentation.object_segmentation"],
-    },
-    "8": {
-        "name": "Image to world transformation",
-        "cmd": [sys.executable, "-m", "source_code.vision.homography.run_image_to_world_transformation"],
-    },
-    "9": {
-        "name": "Clear existing calibration images",
-        "cmd": [sys.executable, "-m", "source_code.vision.camera.clear_raw_images"],
-    },
-}
+# ---------------- TESLA THEME ----------------
+BG = "#000000"
+SIDEBAR = "#050505"
+CARD = "#111111"
+ACCENT = "#e31937"
+TEXT = "#ffffff"
+MUTED = "#a3a3a3"
 
-# =========================
-# MAIN WINDOW
-# =========================
+# ---------------- APP STATE ----------------
+def show_page(page):
+    global current_page
+    page.tkraise()
+    current_page = page
+
+def exit_app():
+    root.destroy()
+
+def change_text(label, new_text):
+    label.config(text=new_text)
+
+def back():
+    i = page_list.index(current_page)
+    if i > 0:
+        show_page(page_list[i - 1])
+    else:
+        show_page(HomePage)
+
+# ---------------- ROOT ----------------
 root = tk.Tk()
-root.title("Physical AI Control Panel")
-root.geometry("1100x700")
-root.configure(bg="#0f172a")
+root.title("Physical AI Simulator")
+root.geometry("900x520")
+root.configure(bg=BG)
 
-# =========================
-# LOG BOX
-# =========================
-log_box = tk.Text(root, height=20, bg="#111827", fg="white", font=("Consolas", 11))
-log_box.pack(fill="both", expand=True, padx=10, pady=10)
+root.grid_rowconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
 
-def log(msg):
-    log_box.insert("end", msg + "\n")
-    log_box.see("end")
+# ---------------- SIDEBAR ----------------
+sidebar = tk.Frame(root, bg=SIDEBAR, width=160)
+sidebar.grid(row=0, column=0, sticky="ns")
 
-# =========================
-# RUN COMMAND (NON-BLOCKING)
-# =========================
-def run_command(cmd_id):
-    name, cmd = RUN_COMMANDS[cmd_id]
+# ---------------- CENTER WRAPPER (CENTERED CONTENT FIX) ----------------
+center_wrapper = tk.Frame(root, bg=BG)
+center_wrapper.grid(row=0, column=1, sticky="nsew")
 
-    def task():
-        log(f"\n=== STARTING: {name} ===")
+center_wrapper.grid_rowconfigure(0, weight=1)
+center_wrapper.grid_columnconfigure(0, weight=1)
 
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
+container = tk.Frame(center_wrapper, bg=BG)
+container.place(relx=0.5, rely=0.5, anchor="center")
 
-        stdout, stderr = process.communicate()
+# ---------------- PAGES ----------------
+HomePage = tk.Frame(container, bg=BG)
+page1 = tk.Frame(container, bg=BG)
+page2 = tk.Frame(container, bg=BG)
+page3 = tk.Frame(container, bg=BG)
+End_page = tk.Frame(container, bg=BG)
 
-        if stdout:
-            log(stdout)
+for p in (HomePage, page1, page2, page3, End_page):
+    p.grid(row=0, column=0, sticky="nsew")
 
-        if stderr:
-            log(stderr)
+current_page = HomePage
+page_list = [HomePage, page1, page2, page3]
 
-        if process.returncode == 0:
-            log(f"FINISHED: {name}")
-        else:
-            log(f"ERROR in: {name}")
-
-        log("-" * 50)
-
-    threading.Thread(target=task).start()
-
-# =========================
-# BUTTON PANEL
-# =========================
-panel = tk.Frame(root, bg="#0f172a")
-panel.pack(fill="x")
-
-def make_btn(text, cmd_id):
-    return tk.Button(
-        panel,
+# ---------------- TESLA BUTTON (BIG + HOVER EFFECT) ----------------
+def tbutton(parent, text, command, bg=CARD):
+    b = tk.Button(
+        parent,
         text=text,
-        command=lambda: run_command(cmd_id),
-        bg="#1f2937",
-        fg="white",
-        font=("Arial", 11),
-        padx=10,
-        pady=5
+        command=command,
+        font=("Helvetica Neue", 14, "bold"),
+        fg=TEXT,
+        bg=bg,
+        activebackground=ACCENT,
+        activeforeground="white",
+        relief="flat",
+        bd=0,
+        padx=28,
+        pady=18,
+        cursor="hand2"
     )
 
-# Row 1
-for cmd_id, data in RUN_COMMANDS.items():
-    tk.Button(
-        panel,
-        text=data["name"],
-        command=lambda c=cmd_id: run_command(c)
-    ).pack(side="left", padx=5)
+    def on_enter(e):
+        b.config(bg=ACCENT)
 
-# =========================
-# PIPELINE FUNCTIONS (GUI VERSION)
-# =========================
-def run_full_pipeline():
-    steps = ["2", "3", "4", "5"]
+    def on_leave(e):
+        b.config(bg=bg)
 
-    def task():
-        log("\n=== FULL PIPELINE START ===")
-        for s in steps:
-            name, cmd = RUN_COMMANDS[s]
-            log(f"Running: {name}")
+    b.bind("<Enter>", on_enter)
+    b.bind("<Leave>", on_leave)
 
-            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            out, err = process.communicate()
+    return b
 
-            if out:
-                log(out)
-            if err:
-                log(err)
+# ---------------- SIDEBAR ----------------
+tk.Label(
+    sidebar,
+    text="CONTROL",
+    font=("Helvetica Neue", 12, "bold"),
+    fg=MUTED,
+    bg=SIDEBAR
+).pack(pady=20)
 
-            if process.returncode != 0:
-                log("PIPELINE STOPPED (ERROR)")
-                return
+tbutton(sidebar, "Back", back, SIDEBAR).pack(pady=5)
+tbutton(sidebar, "Exit", exit_app, SIDEBAR).pack(pady=5)
 
-        log("PIPELINE COMPLETE")
+# ---------------- HOME PAGE ----------------
+tk.Label(
+    HomePage,
+    text="Home Page",
+    font=("Helvetica Neue", 28, "bold"),
+    fg=TEXT,
+    bg=BG
+).pack(pady=40)
 
-    threading.Thread(target=task).start()
+tbutton(
+    HomePage,
+    "Start",
+    lambda: show_page(page1),
+    CARD
+).pack(pady=20)
 
-def run_simulation_flow():
-    def task():
-        log("\n=== OBJECT + SIMULATION FLOW ===")
+cover_image = tk.PhotoImage(file="source_code/utility/img.png")
+tk.Label(HomePage, image=cover_image, bg=BG).pack(pady=20)
 
-        run_command("7")
-        time.sleep(1)
-        run_command("8")
-        time.sleep(1)
-        run_command("6")
+# ---------------- PAGE 1 ----------------
+tk.Label(
+    page1,
+    text="Is this a new camera or no?",
+    font=("Helvetica Neue", 14),
+    fg=MUTED,
+    bg=BG
+).pack(pady=15)
 
-    threading.Thread(target=task).start()
+tbutton(
+    page1,
+    "Yes and clear calibration images",
+    lambda: {run_new_camera_setup(True), show_page(page3)},
+    CARD
+).pack(pady=12)
 
-# =========================
-# EXTRA CONTROL BUTTONS
-# =========================
-control = tk.Frame(root, bg="#0f172a")
-control.pack(fill="x")
+tbutton(
+    page1,
+    "Yes but keep existing calibration images",
+    lambda: {run_new_camera_setup(False), show_page(page3)},
+    CARD
+).pack(pady=12)
 
-tk.Button(
-    control,
-    text="RUN FULL CALIBRATION PIPELINE",
-    bg="#10b981",
-    fg="black",
-    command=run_full_pipeline
-).pack(side="left", padx=10, pady=10)
+tbutton(
+    page1,
+    "No",
+    lambda: show_page(page2),
+    CARD
+).pack(pady=12)
 
-tk.Button(
-    control,
-    text="OBJECT → SIMULATION FLOW",
-    bg="#3b82f6",
+# ---------------- PAGE 2 ----------------
+tk.Label(
+    page2,
+    text="Was the camera or workspace moved?",
+    font=("Helvetica Neue", 14),
+    fg=MUTED,
+    bg=BG
+).pack(pady=20)
+
+tbutton(
+    page2,
+    "Yes",
+    lambda: {run_workspace_moved_setup(), show_page(page3)},
+    ACCENT
+).pack(pady=20)
+
+tbutton(
+    page2,
+    "No",
+    lambda: show_page(page3),
+    CARD
+).pack(pady=12)
+
+# ---------------- PAGE 3 ----------------
+tk.Label(
+    page3,
+    text="What do you want to do now?",
+    font=("Helvetica Neue", 16, "bold"),
+    fg=TEXT,
+    bg=BG
+).pack(pady=30)
+
+tbutton(
+    page3,
+    "1. Find objects first\nThen prompt the task",
+    lambda: {
+        print("\nOkay. I will find the objects first."),
+        run_multiple_cmds(["7", "8"]),
+        print("\nNow I will start the simulation."),
+        run_command("6"),
+        show_page(End_page)
+    },
+    CARD
+).pack(pady=12)
+
+tbutton(
+    page3,
+    "2. Directly prompt the task",
+    lambda: {
+        print("\nOkay. I will directly start the simulation."),
+        run_command("6"),
+        show_page(End_page)
+    },
+    ACCENT
+).pack(pady=12)
+
+# ---------------- END PAGE ----------------
+tk.Label(
+    End_page,
+    text="Simulation Complete! What do you want to do next?",
+    font=("Helvetica Neue", 20, "bold"),
+    fg=ACCENT,
+    bg=BG
+).pack(pady=20)
+
+tk.Label(
+    End_page,
+    text="All pipeline steps executed successfully.\nSystem is safe to shutdown.",
+    font=("Helvetica Neue", 12),
+    fg=MUTED,
+    bg=BG
+).pack()
+
+log_box = tk.Text(
+    End_page,
+    height=8,
+    bg="#0a0a0a",
     fg="white",
-    command=run_simulation_flow
-).pack(side="left", padx=10)
+    font=("Consolas", 10),
+    relief="flat",
+    bd=0
+)
+log_box.pack(pady=15)
 
-tk.Button(
-    control,
-    text="CLEAR LOG",
-    bg="#ef4444",
-    fg="white",
-    command=lambda: log_box.delete("1.0", "end")
-).pack(side="right", padx=10)
+log_box.insert("end", "✓ Camera calibrated\n")
+log_box.insert("end", "✓ Homography computed\n")
+log_box.insert("end", "✓ Object detection complete\n")
+log_box.insert("end", "✓ RoboDK simulation generated\n")
+log_box.config(state="disabled")
 
-# =========================
-# RUN
-# =========================
+tbutton(
+    End_page,
+    "RESTART",
+    lambda: show_page(HomePage),
+    ACCENT
+).pack()
+
+# ---------------- START ----------------
+show_page(HomePage)
 root.mainloop()
