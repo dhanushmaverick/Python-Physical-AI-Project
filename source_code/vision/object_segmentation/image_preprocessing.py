@@ -14,18 +14,14 @@ def threshold_image_RGB(im):
     G = G.astype(np.float32)
     B = B.astype(np.float32)
 
-    cv2.imshow("Image",im)
-    cv2.waitKey(0)
+   
     eps = 1e-6;
     r = R  / (R+G+B+eps) 
-    cv2.imshow("Red", r)
-    cv2.waitKey(0)
+    
     g = G  / (R+G+B+eps) 
-    cv2.imshow("Green", g)
-    cv2.waitKey(0);
+   
     b = B  / (R+G+B+eps) 
-    cv2.imshow("Blue", b)
-    cv2.waitKey(0)
+    
     
     r_thresh_val = thresh_vals[0]
     g_thresh_val = thresh_vals[1]
@@ -55,12 +51,7 @@ def threshold_image_RGB(im):
 
 
     #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
-    cv2.imshow("Red Binary",r_thresh)
-    cv2.waitKey(0)
-    cv2.imshow("Green Binary",g_thresh)
-    cv2.waitKey(0)
-    cv2.imshow("Blue Binary", b_thresh)
-    cv2.waitKey(0)
+    
     return r_thresh, b_thresh, g_thresh
 
 def threshold_image_HSV(im): # NON FUNCTIONAL !!! --> doesn't work for BLUE!

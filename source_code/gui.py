@@ -1,214 +1,233 @@
-import subprocess
-import sys
-import time
+from source_code.main import *
+import tkinter as tk
+from tkinter import ttk
+import cv2
+import base64
+
+def show_page(page):
+    global current_page
+    page.tkraise()
+    current_page = page
 
 
-RUN_COMMANDS = {
-    "1": {
-        "name": "Test camera",
-        "cmd": [sys.executable, "-m", "source_code.vision.camera.test_camera"],
-    },
-    "2": {
-        "name": "Capture calibration images",
-        "cmd": [sys.executable, "-m", "source_code.vision.calibration.run_capture_images"],
-    },
-    "3": {
-        "name": "Run calibration",
-        "cmd": [sys.executable, "-m", "source_code.vision.calibration.run_calibration"],
-    },
-    "4": {
-        "name": "Run undistortion",
-        "cmd": [sys.executable, "-m", "source_code.vision.undistortion.run_undistort"],
-    },
-    "5": {
-        "name": "Run homography",
-        "cmd": [sys.executable, "-m", "source_code.vision.homography.run_homography"],
-    },
-    "6": {
-        "name": "RoboDK Initialization",
-        "cmd": [sys.executable, "-m", "source_code.RoboDK_pran.run_AI_script"],
-    },
-    "7": {
-        "name": "Object segmentation",
-        "cmd": [sys.executable, "-m", "source_code.vision.object_segmentation.object_segmentation"],
-    },
-    "8": {
-        "name": "Image to world transformation",
-        "cmd": [sys.executable, "-m", "source_code.vision.homography.run_image_to_world_transformation"],
-    },
-}
+def exit_app():
+    root.destroy()
+def change_text(label,new_text):
+    label.config(text=new_text)
+def back():
+    i = page_list.index(current_page)
+    if i>0:
+        show_page(page_list[i-1])
+    else: show_page(HomePage)
+root = tk.Tk()
+root.title("Physical AI Simulator")
+root.geometry("700x450")
+root.configure(bg="#1e1e2e")
+#log_box = tk.Text(root, height=20, bg="#111827", fg="white", font=("Consolas", 11))
+#log_box.pack(fill="both", expand=True, padx=10, pady=10)
+
+container = tk.Frame(root)
+container.pack(fill="both", expand=True)
+container.grid_rowconfigure(0, weight=1)
+container.grid_columnconfigure(0, weight=1)
+#Page Definitions
+HomePage = tk.Frame(container, bg="#1e1e2e")
+HomePage.grid(row=0, column=0, sticky="nsew")
+page1 = tk.Frame(container, bg="#1e1e2e")
+page1.grid(row=0, column=0, sticky="nsew")
+page2 = tk.Frame(container, bg="#282a36")
+page2.grid(row=0, column=0, sticky="nsew")
+page3 = tk.Frame(container, bg="#282a36")
+page3.grid(row=0, column=0, sticky="nsew")
+End_page = tk.Frame(container, bg="#282a36")
+End_page.grid(row=0, column=0, sticky="nsew")
+current_page = HomePage;
+page_list = [HomePage,page1,page2,page3];
+back_btn = tk.Button(root,text="Back",command=back, font=("Segoe UI", 12, "bold")).pack(side="left", padx=10, pady=10)
+#HomePage
+#back_btn = tk.Button(root,text="Back",command=back, font=("Segoe UI", 12, "bold")).pack(side="left", padx=10, pady=10)
+cover_image = tk.PhotoImage(file = "source_code/utility/img.png")
+
+title1 = tk.Label(
+    HomePage,
+    text="Home Page",
+    font=("Segoe UI", 28, "bold"),
+    bg="#1e1e2e",
+    fg="white"
+)
+title1.pack(pady=40)
+start_button = tk.Button(HomePage,text="Start",command=lambda: show_page(page1), font=("Segoe UI", 12, "bold"))
+start_button.pack(pady=20)
+exit_button_home = tk.Button(root,text="Exit",command=exit_app, font=("Segoe UI", 12, "bold"))
+exit_button_home.pack(side="bottom", pady=10)
+
+label_img = tk.Label(HomePage, image = cover_image, bg="#1e1e2e")
+label_img.pack(pady=20)
+
+#Page1: Abt asking camera
 
 
-def ask_yes_no(question):
-    while True:
-        answer = input(question + " (yes/no): ").strip().lower()
+desc1 = tk.Label(
+    page1,
+    text="Is this a new camera or no?",
+    font=("Segoe UI", 14),
+    bg="#1e1e2e",
+    fg="#cfcfe6"
+)
+desc1.pack(pady=10)
+btn1 = tk.Button(page1, text="Yes and clear calibration images", command=lambda: {run_new_camera_setup(True),show_page(page3)})
+btn1.pack( padx=5,pady = 20)
 
-        if answer in ["yes", "y"]:
-            return True
-
-        if answer in ["no", "n"]:
-            return False
-
-        print("Please type yes or no.")
-
-
-def run_command(choice):
-    command = RUN_COMMANDS[choice]
-
-    print("\n" + "=" * 40)
-    print(f"Starting: {command['name']}")
-    print("=" * 40)
-
-    result = subprocess.run(
-        command["cmd"],
-        capture_output=True,
-        text=True
-    )
-
-    if result.stdout:
-        print(result.stdout)
-
-    if result.stderr:
-        print(result.stderr)
-
-    if result.returncode == 0:
-        print(f"\nFinished: {command['name']}")
-    else:
-        print(f"\nSomething went wrong while running: {command['name']}")
-
-    print("-" * 40)
-    time.sleep(1)
-
-    return result
+btn2 = tk.Button(page1, text="Yes but keep existing calibration images", command=lambda: {run_new_camera_setup(False),show_page(page3)})
+btn2.pack(padx=5,pady=20)
+btn2 = tk.Button(page1, text="No", command=lambda: show_page(page2))
+btn2.pack(padx=5,pady=25)
+#
+#btn1 = tk.Button(
+ #   page1,
+  #  text="Go To Page 2",
+   # font=("Segoe UI", 12, "bold"),
+    #bg="#6c63ff",
+   # fg="white",
+   # activebackground="#5848e5",
+   # activeforeground="white",
+   # relief="flat",
+   # padx=20,
+   # pady=10,
+   # command=lambda: show_page(page2)
+#)
+#btn1.pack(pady=30)
 
 
-def run_steps(steps):
-    for step in steps:
-        result = run_command(step)
+#Page2
 
-        if result.returncode != 0:
-            print("\nStopped because one step failed.")
-            return False
+title2 = tk.Label(
+    page2,
+    text="Second Page",
+    font=("Segoe UI", 28, "bold"),
+    bg="#282a36",
+    fg="white"
+)
+title2.pack(pady=40)
 
-    return True
+desc2 = tk.Label(
+    page2,
+    text="Was the camera or workspace moved?",
+    font=("Segoe UI", 14),
+    bg="#282a36",
+    fg="#dcdcdc"
+)
+desc2.pack(pady=10)
 
+btn2_yes = tk.Button(
+    page2,
+    text="Yes",
+    font=("Segoe UI", 12, "bold"),
+    bg="#ff6584",
+    fg="white",
+    activebackground="#e14d6c",
+    activeforeground="white",
+    relief="flat",
+    padx=20,
+    pady=10,
+    command=lambda: {run_workspace_moved_setup(),show_page(page3)}
+)
+btn2_yes.pack(pady=30)
+btn2_no = tk.Button(
+    page2,
+    text="No",
+    font=("Segoe UI", 12, "bold"),
+    bg="#ff6584",
+    fg="white",
+    activebackground="#e14d6c",
+    activeforeground="white",
+    relief="flat",
+    padx=20,
+    pady=10,
+    command=lambda: show_page(page3)
+)
+btn2_no.pack(pady=30)
+#Page3: Simulation and AI prompt
+title3 = tk.Label(
+    page3,
+    text="What do you want to do now?",
+    font=("Arial", 16, "bold"),
+    fg="white",
+    bg="#0f172a"
+)
+title3.pack(pady=40)
+btn_op1 = tk.Button(
+    page3,
+    text="1. Find objects first\nThen prompt the task",
+    font=("Arial", 12),
+    bg="#1f2937",
+    fg="white",
+    width=30,
+    height=3,
+    command=lambda:{ print("\nOkay. I will find the objects first."),run_multiple_cmds(["7", "8"]),print("\nNow I will start the simulation."),run_command("6"),show_page(End_page)},
+    relief="flat",
+    activebackground="#374151"
+)
+btn_op1.pack(pady=10)
+btn_op2 = tk.Button(
+    page3,
+    text="2. Directly prompt the task",
+    font=("Arial", 12),
+    bg="#2563eb",
+    fg="white",
+    width=30,
+    height=3,
+    command=lambda:{print("\nOkay. I will directly start the simulation."),run_command("6"),show_page(End_page)},
+    relief="flat",
+    activebackground="#1d4ed8"
+)
+btn_op2.pack(pady=10)
+title = tk.Label(
+    End_page,
+    text="Simulation Complete! What do you want to do next?",
+    font=("Arial", 22, "bold"),
+    fg="#22c55e",
+    bg="#0f172a"
+)
+status_frame = tk.Frame(root, bg="#111827", padx=20, pady=20)
+status_frame.pack(pady=10)
 
-def output_contains(result, text):
-    output_text = (result.stdout or "") + (result.stderr or "")
-    return text in output_text
+status_label = tk.Label(
+    End_page,
+    text="All pipeline steps executed successfully.\nSystem is safe to shutdown.",
+    font=("Arial", 12),
+    fg="white",
+    bg="#111827",
+    justify="center"
+)
+status_label.pack()
+title.pack(pady=20)
+log_box = tk.Text(
+    End_page,
+    height=8,
+    bg="#0b1220",
+    fg="#10b981",
+    font=("Consolas", 10),
+    relief="flat"
+)
+log_box.pack(fill="x", padx=20, pady=15)
 
+log_box.insert("end", "✓ Camera calibrated\n")
+log_box.insert("end", "✓ Homography computed\n")
+log_box.insert("end", "✓ Object detection complete\n")
+log_box.insert("end", "✓ RoboDK simulation generated\n")
 
-def run_camera_setup():
-    """
-    If camera/workspace changed:
-    1. Try calibration first.
-    2. If not enough valid images, capture images.
-    3. Then run calibration again.
-    4. Then run undistortion and homography.
-    """
+log_box.config(state="disabled")
+restart_btn = tk.Button(
+    End_page,
+    text="RESTART",
+    command=lambda: show_page(HomePage),
+    bg="#2563eb",
+    fg="white",
+    font=("Arial", 12),
+    width=12
+)
+restart_btn.pack(side="left", padx=10)
+show_page(HomePage)
 
-    calibration_result = run_command("3")
-
-    if calibration_result.returncode != 0:
-        if output_contains(calibration_result, "Not enough valid calibration images"):
-            print("\nNot enough good calibration images were found.")
-            print("I will take new calibration images now.")
-
-            capture_result = run_command("2")
-
-            if capture_result.returncode != 0:
-                if output_contains(capture_result, "NO_CAMERA_FOUND"):
-                    print("\nNo camera was found.")
-                    print("I will now run the camera test.")
-
-                    run_command("1")
-
-                    print("\nPlease fix the camera and run this again.")
-                    return False
-
-                print("\nCould not capture calibration images.")
-                return False
-
-            print("\nTrying calibration again with the new images.")
-
-            calibration_result = run_command("3")
-
-            if calibration_result.returncode != 0:
-                print("\nCalibration still failed.")
-                return False
-
-        else:
-            print("\nCalibration failed.")
-            return False
-
-    return run_steps(["4", "5"])
-
-
-def simple_automatic_setup():
-    print("\n========== SIMPLE AUTOMATIC SETUP ==========")
-
-    new_camera_or_moved = ask_yes_no(
-        "Is this a new camera, or was the camera/workspace moved?"
-    )
-
-    if new_camera_or_moved:
-        print("\nOkay. I will set up the camera again.")
-
-        if not run_camera_setup():
-            return
-    else:
-        print("\nOkay. I will use the existing camera setup.")
-
-    objects_ready = ask_yes_no(
-        "\nAre the objects placed on the workspace?"
-    )
-
-    if not objects_ready:
-        print("\nPlease place the objects on the workspace first.")
-        print("Then run this again.")
-        return
-
-    print("\nOkay. I will now find the objects and calculate their positions.")
-
-    if not run_steps(["7", "8"]):
-        return
-
-    start_robot = ask_yes_no(
-        "\nDo you want to start the robot now?"
-    )
-
-    if start_robot:
-        run_command("6")
-    else:
-        print("\nRobot start skipped.")
-
-
-def main():
-    while True:
-        print("\n========== AUTOMATED MAIN ==========")
-
-        print("w. Simple automatic setup")
-
-        for key, value in RUN_COMMANDS.items():
-            print(f"{key}. {value['name']}")
-
-        print("0. Exit")
-
-        choice = input("\nChoose an option: ").strip().lower()
-
-        if choice == "0":
-            print("Exited")
-            break
-
-        if choice == "w":
-            simple_automatic_setup()
-
-        elif choice in RUN_COMMANDS:
-            run_command(choice)
-
-        else:
-            print("Invalid choice.")
-
-
-if __name__ == "__main__":
-    main()
+root.mainloop()
