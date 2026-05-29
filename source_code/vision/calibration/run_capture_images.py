@@ -43,7 +43,7 @@ print("CLICK S to SAVE")
 while True:
     ret, frame = cap.read()
     if not ret:
-        break
+        raise RuntimeError("NO_CAMERA_FOUND")
 
     cv2.imshow("Webcam", frame)
     

@@ -1,34 +1,41 @@
-# Run command : 
-#            python -m source_code.vision.camera.test_camera
+# Run command:
+# python -m source_code.vision.camera.test_camera
+# python -m source_code.vision.camera.test_camera --camera 1 # (if you have multiple cameras and want to test a different one)
 
+import argparse
 import cv2
-import sys
-from pathlib import Path
-
-
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
 
 from source_code.vision.camera.camera import Webcam
 
 
 def main():
-    webcam = Webcam(camera_index=0, width=1280, height=720)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--camera",
+        type=int,
+        default=0,
+        help="Camera number to use. Default is 0."
+    )
+
+    args = parser.parse_args()
+
+    webcam = Webcam(camera_index=args.camera, width=1280, height=720)
 
     try:
         webcam.open()
-        print("Webcam opened successfully.")
+        print(f"Webcam {args.camera} opened successfully.")
         print("Press Q to quit.")
 
         while True:
             frame = webcam.read()
-            cv2.imshow("Webcam Test", frame)
+            cv2.imshow(f"Webcam Test - Camera {args.camera}", frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break
 
     except Exception as e:
         print(f"Error: {e}")
+        exit(1)
 
     finally:
         webcam.release()
