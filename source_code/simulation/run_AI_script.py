@@ -9,7 +9,7 @@ from source_code.utility.paths import *
 
 def load_ai_motion_script():
     
-    ai_script_path = ROBODK_DIR / "test_script.py"
+    ai_script_path = ROBODK_DIR / "example_main_motion_plan.py"
 
     if not ai_script_path.exists():
         raise FileNotFoundError(f"AI motion script not found:\n{ai_script_path}")

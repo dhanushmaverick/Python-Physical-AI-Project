@@ -90,7 +90,7 @@ def output_contains(result, text):
     return text in output_text
 
 
-def run_new_camera_setup():
+def run_new_camera_setup(yes_clear):
     """
     New camera means:
     optional clear images -> capture images -> calibration -> undistortion -> homography
@@ -100,7 +100,7 @@ def run_new_camera_setup():
 
     print("\nOkay. I will set up the new camera.")
 
-    clear_images = ask_yes_no("Do you want to clear existing calibration images?")
+    clear_images =yes_clear #ask_yes_no("Do you want to clear existing calibration images?")
 
     if clear_images:
         clear_result = run_command("9")
