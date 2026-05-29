@@ -1,4 +1,3 @@
-
 def run_motion(ctx):
     """
     Test AI-generated motion plan.
@@ -17,7 +16,7 @@ def run_motion(ctx):
     robot = ctx.robot
 
     # ------------------------------------------------------------
-    # Block poses from current World_Pose.json
+    # Read Block poses though tool
     # ------------------------------------------------------------
     red_x = 19.924
     red_y = 9.888
@@ -123,4 +122,3 @@ def run_motion(ctx):
     # Return home
     # ------------------------------------------------------------
     ctx.go_home()
-   
