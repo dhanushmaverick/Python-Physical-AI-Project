@@ -2,6 +2,7 @@ from source_code.main import *
 import tkinter as tk
 from tkinter import ttk
 import cv2
+from source_code.utility.paths import *
 
 # =====================================================
 # IMAGE SETUP
