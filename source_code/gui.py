@@ -7,13 +7,13 @@ from source_code.utility.paths import *
 # =====================================================
 # IMAGE SETUP
 # =====================================================
-# cv2.imwrite(
-#     OBJ_SEGMENTATION_DIR/"Img.png",
-#     cv2.resize(
-#         cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
-#         (650, 650)
-#     )
-# )
+cv2.imwrite(
+    OBJ_SEGMENTATION_DIR/"Img.png",
+     cv2.resize(
+         cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
+         (500, 500)
+     )
+ )
 
 cv2.imwrite(
     "source_code/utility/img_pg1.png",
@@ -22,7 +22,13 @@ cv2.imwrite(
         (150, 150)
     )
 )
-
+cv2.imwrite(
+    "source_code/utility/img_home.png",
+    cv2.resize(
+        cv2.imread("source_code/utility/img.png"),
+        (300, 300)
+    )
+)
 # =====================================================
 # THEME (TESLA AUTOPILOT STYLE HUD)
 # =====================================================
@@ -141,7 +147,7 @@ def calibrate_camera_click():
 # =====================================================
 # IMAGES
 # =====================================================
-cover_image = tk.PhotoImage(file="source_code/utility/img.png")
+cover_image = tk.PhotoImage(file="source_code/utility/img_home.png")
 cover_image_pg1 = tk.PhotoImage(file="source_code/utility/img_pg1.png")
 img_used = tk.PhotoImage(file="source_code/vision/object_segmentation/Img.png")
 
