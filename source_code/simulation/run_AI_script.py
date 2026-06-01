@@ -9,6 +9,7 @@ from source_code.utility.paths import *
 
 def load_ai_motion_script():
     
+    ai_script_path = AI_MOTION_PLAN_PATH 
 
     if not AI_MOTION_PLAN_PATH.exists():
         raise FileNotFoundError(f"AI motion script not found:\n{AI_MOTION_PLAN_PATH}")

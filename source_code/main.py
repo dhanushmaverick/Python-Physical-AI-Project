@@ -2,7 +2,7 @@
 import subprocess
 import sys
 import time
-
+from source_code.AI.open_ai_api import query
 
 RUN_COMMANDS = {
     "1": {

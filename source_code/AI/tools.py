@@ -16,8 +16,13 @@ def get_world_coords_string()->str:
     return structured_string
 
 @tool
-def read_roboDK_function_list()->str:
-    """String containing python-RoboDK functions which are to be used in order to generate code. Do not use any other roboDK functions except these."""
+def read_roboDKContext()->str:
+    """String containing RoboDKContext class definition code (from source_code/simulation/RoboDK_config.py) which is to be used in order to generate code. Do not use any other roboDK functions or create any own functions except the member functions of this class."""
     with open("source_code/simulation/RoboDK_config.py", "r") as f:
         return f.read()
 
+@tool
+def read_exemplary_code()->str:
+    """String containing example code (from source_code/simulation/example_main_motion_plan.py) of what is to be generated. Do not create or use any other functions except the ones used here"""
+    with open("source_code/simulation/example_main_motion_plan.py", "r") as f:
+        return f.read()
