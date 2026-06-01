@@ -1,15 +1,15 @@
 from source_code.main import *
 import tkinter as tk
-from tkinter import ttk,messagebox
+from tkinter import ttk
 import cv2
 
 # =====================================================
 # IMAGE SETUP
 # =====================================================
 cv2.imwrite(
-    OBJ_SEGMENTATION_DIR/"Img.png",
+    "source_code/vision/object_segmentation/Img.png",
     cv2.resize(
-        cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
+        cv2.imread("source_code/vision/object_segmentation/Img.jpeg"),
         (650, 650)
     )
 )
@@ -94,6 +94,7 @@ def simulation(entry):
         query(input_entry.get())
         run_command("6")
         show_page(End_page)
+
 # =====================================================
 # IMAGES
 # =====================================================
@@ -220,13 +221,13 @@ tk.Label(
     bg=BG
 ).pack()
 
-#tk.Label(
- #   center,
-  #  text="User Query",
- #   font=("Segoe UI", 26, "bold"),
- #   fg=TEXT,
- #   bg=BG
-#).pack(pady=20)
+tk.Label(
+    center,
+    text="User Query",
+    font=("Segoe UI", 26, "bold"),
+    fg=TEXT,
+    bg=BG
+).pack(pady=20)
 
 input_entry = tk.Entry(
     center,
@@ -238,30 +239,6 @@ input_entry = tk.Entry(
     justify="center"
 )
 input_entry.pack(ipady=16)   # BIGGER INPUT HEIGHT
-input_entry.insert(0,"User Query")
-
-def on_focus_in(event):
-    if input_entry.get() == "User Query":
-        input_entry.delete(0, tk.END)
-        input_entry.config(fg="#cccccc75")
-
-def on_focus_out(event):
-    if not input_entry.get():
-        input_entry.insert(0, "User Query")
-        input_entry.config(fg="cccccc75")
-
-input_entry.bind("<FocusIn>", on_focus_in)
-input_entry.bind("<FocusOut>", on_focus_out)
-
-tk.Button(
-    center,
-    text="Change picture to be used",
-    command= lambda:run_command("2"),
-    font=("Segoe UI", 25, "bold"),
-    bg=CARD,
-    fg=TEXT,
-    bd=0
-).pack(pady=15)
 
 bottom_buttons = tk.Frame(center, bg=BG)
 bottom_buttons.pack(pady=20)
@@ -362,7 +339,7 @@ tk.Button(
     end_frame,
     text="RESTART",
     command=lambda: show_page(HomePage),
-    font=("Segoe UI", 30, "bold"),
+    font=("Segoe UI", 26, "bold"),
     bg=GREEN,
     fg="black",
     bd=0

@@ -54,7 +54,7 @@ agent = create_agent(
        Note: Add +90 to the true yaw angles of the blocks in order for gripper to align laterally for gripping. 
              Do this in generated code, exactly how it was implemented in the exemplary code.
        Note: Do not create any new functions by yourself. Only use the member functions specified under the RoboDKContext class.
-       The stacking will be done by a ur5e Robotic Arm in Robodk with a pre setup workspace.
+       The stacking will be done by a ur5e Robotic Arm in Robodk with a pre setup workspace. 
     Everything else necessary for the simulation to run and robodk to link etc has already been implemented manually.
     Return as code as a function run_motion(ctx) within the file source_code/AI/main_motion_plan.py and nothing else.
     """,

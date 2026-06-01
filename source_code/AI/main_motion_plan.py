@@ -1,110 +1,92 @@
 def run_motion(ctx):
-    """Stack order per user:
-    1) Red placed on top of Blue (blue -> base, red -> middle)
-    2) Green placed on top of Red (green -> top)
+    """Stacking order: blue on red, then green on blue.
 
-    All blocks are stacked with the same orientation.
-    Note: Add +90 to the true yaw angles of the blocks in order for gripper to align laterally for gripping.
+    All blocks are placed with the same orientation.
+    Note: +90 is added to the true yaw angles for lateral gripper alignment.
     """
 
     robot = ctx.robot
 
     # ------------------------------------------------------------
-    # Read block poses (world-frame) from the RoboDKContext example values
-    # (Yaw angles: +90 applied as required)
+    # Current block poses (from World coords / station setup)
     # ------------------------------------------------------------
-    red_x, red_y = 19.924, 9.888
+    red_x, red_y = 20.162, 9.737
     red_yaw = 91.0783 + 90
 
-    blue_x, blue_y = 81.298, 49.511
+    blue_x, blue_y = 81.481, 49.459
     blue_yaw = 52.3926 + 90
 
-    green_x, green_y = 161.474, 75.212
+    green_x, green_y = 161.319, 75.452
     green_yaw = 14.3145 + 90
 
     # ------------------------------------------------------------
-    # Z and stacking parameters
+    # Z values from RoboDKContext
     # ------------------------------------------------------------
     approach_z = ctx.approach_z
     pick_z = ctx.pick_z
     place_base_z = ctx.place_base_z
     block_thickness = ctx.block_thickness
 
-    # Use the BLUE block position as the stack anchor (base)
-    stack_x = blue_x
-    stack_y = blue_y
+    # ------------------------------------------------------------
+    # Use RED as the base location for the final stack
+    # ------------------------------------------------------------
+    stack_x = red_x
+    stack_y = red_y
 
-    # Same orientation for all blocks in final stack: use BLUE yaw
-    stack_orient = blue_yaw
+    # Use consistent stack orientation (same for all stacked blocks)
+    # Choose red yaw as the reference.
+    stack_orient = red_yaw
 
-    blue_place_z = place_base_z
-    red_place_z = place_base_z + block_thickness
+    red_place_z = place_base_z
+    blue_place_z = place_base_z + block_thickness
     green_place_z = place_base_z + block_thickness * 2.0
 
     # ------------------------------------------------------------
-    # Pick BLUE (base)
-    # ------------------------------------------------------------
-    ctx.open_gripper("blue")
-
-    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
-    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, pick_z, blue_yaw))
-
-    ctx.close_gripper("blue")
-
-    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
-
-    # ------------------------------------------------------------
-    # Place BLUE at base
-    # ------------------------------------------------------------
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, blue_place_z, stack_orient))
-
-    ctx.open_gripper("blue")
-
-    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
-
-    # ------------------------------------------------------------
-    # Pick RED (middle)
+    # Pick RED (place onto stack base)
     # ------------------------------------------------------------
     ctx.open_gripper("red")
 
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, pick_z, red_yaw))
-
     ctx.close_gripper("red")
-
     robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
 
-    # ------------------------------------------------------------
-    # Place RED on BLUE
-    # ------------------------------------------------------------
+    # Place RED at base
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, red_place_z, stack_orient))
-
     ctx.open_gripper("red")
-
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
 
     # ------------------------------------------------------------
-    # Pick GREEN (top)
+    # Pick BLUE and place on RED
+    # ------------------------------------------------------------
+    ctx.open_gripper("blue")
+
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, pick_z, blue_yaw))
+    ctx.close_gripper("blue")
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
+
+    # Place BLUE on RED
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, blue_place_z, stack_orient))
+    ctx.open_gripper("blue")
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
+
+    # ------------------------------------------------------------
+    # Pick GREEN and place on BLUE
     # ------------------------------------------------------------
     ctx.open_gripper("green")
 
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, pick_z, green_yaw))
-
     ctx.close_gripper("green")
-
     robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
 
-    # ------------------------------------------------------------
-    # Place GREEN on RED
-    # ------------------------------------------------------------
+    # Place GREEN on BLUE
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, green_place_z, stack_orient))
-
     ctx.open_gripper("green")
-
     robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
 
     # ------------------------------------------------------------

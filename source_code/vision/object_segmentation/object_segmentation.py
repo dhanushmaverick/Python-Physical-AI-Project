@@ -148,7 +148,7 @@ def I_pro(im):
         json.dump(processed_data,file,indent=3);
 
 def main():
-    I_pro(cv2.imread(OBJ_SEGMENTATION_DIR / "Img.jpeg"))
+    I_pro(cv2.imread(OBJ_SEGMENTATION_DIR / "Img.png"))
 
 if __name__ == "__main__":
     main()
