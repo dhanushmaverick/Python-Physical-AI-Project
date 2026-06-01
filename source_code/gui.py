@@ -86,42 +86,6 @@ def back():
     else:
         show_page(HomePage)
 
-<<<<<<< HEAD
-container = tk.Frame(root)
-container.pack(fill="both", expand=True)
-container.grid_rowconfigure(0, weight=1)
-container.grid_columnconfigure(0, weight=1)
-#Page Definitions
-HomePage = tk.Frame(container, bg="#1e1e2e")
-HomePage.grid(row=0, column=0, sticky="nsew")
-page1 = tk.Frame(container, bg="#1e1e2e")
-page1.grid(row=0, column=0, sticky="nsew")
-page2 = tk.Frame(container, bg="#282a36")
-page2.grid(row=0, column=0, sticky="nsew")
-page3 = tk.Frame(container, bg="#282a36")
-page3.grid(row=0, column=0, sticky="nsew")
-End_page = tk.Frame(container, bg="#282a36")
-End_page.grid(row=0, column=0, sticky="nsew")
-current_page = HomePage;
-page_list = [HomePage,page1,page2,page3];
-back_btn = tk.Button(root,text="Back",command=back, font=("Segoe UI", 12, "bold")).pack(side="left", padx=10, pady=10)
-#HomePage
-#back_btn = tk.Button(root,text="Back",command=back, font=("Segoe UI", 12, "bold")).pack(side="left", padx=10, pady=10)
-cover_image = tk.PhotoImage(file = "source_code/utility/img.png")
-
-title1 = tk.Label(
-    HomePage,
-    text="Home Page",
-    font=("Segoe UI", 28, "bold"),
-    bg="#1e1e2e",
-    fg="white"
-)
-title1.pack(pady=40)
-start_button = tk.Button(HomePage,text="Start",command=lambda: show_page(page1), font=("Segoe UI", 12, "bold"))
-start_button.pack(pady=20)
-exit_button_home = tk.Button(root,text="Exit",command=exit_app, font=("Segoe UI", 12, "bold"))
-exit_button_home.pack(side="bottom", pady=10)
-=======
 def simulation(entry):
     if entry.get().strip() == "":
         show_page(End_page)
@@ -130,7 +94,6 @@ def simulation(entry):
         query(input_entry.get())
         run_command("6")
         show_page(End_page)
->>>>>>> 4c263593b4ab5370b88bae0c7133d3b553b9c5de
 
 # =====================================================
 # IMAGES
@@ -139,127 +102,6 @@ cover_image = tk.PhotoImage(file="source_code/utility/img.png")
 cover_image_pg1 = tk.PhotoImage(file="source_code/utility/img_pg1.png")
 img_used = tk.PhotoImage(file="source_code/vision/object_segmentation/Img.png")
 
-<<<<<<< HEAD
-#Page1: Abt asking camera
-
-
-desc1 = tk.Label(
-    page1,
-    text="Is this a new camera or no?",
-    font=("Segoe UI", 14),
-    bg="#1e1e2e",
-    fg="#cfcfe6"
-)
-desc1.pack(pady=10)
-btn1 = tk.Button(page1, text="Yes and clear calibration images", command=lambda: {run_new_camera_setup(True),show_page(page3)})
-btn1.pack( padx=5,pady = 20)
-
-btn2 = tk.Button(page1, text="Yes but keep existing calibration images", command=lambda: {run_new_camera_setup(False),show_page(page3)})
-btn2.pack(padx=5,pady=20)
-btn2 = tk.Button(page1, text="No", command=lambda: show_page(page2))
-btn2.pack(padx=5,pady=25)
-#
-#btn1 = tk.Button(
- #   page1,
-  #  text="Go To Page 2",
-   # font=("Segoe UI", 12, "bold"),
-    #bg="#6c63ff",
-   # fg="white",
-   # activebackground="#5848e5",
-   # activeforeground="white",
-   # relief="flat",
-   # padx=20,
-   # pady=10,
-   # command=lambda: show_page(page2)
-#)
-#btn1.pack(pady=30)
-
-
-#Page2
-
-title2 = tk.Label(
-    page2,
-    text="Second Page",
-    font=("Segoe UI", 28, "bold"),
-    bg="#282a36",
-    fg="white"
-)
-title2.pack(pady=40)
-
-desc2 = tk.Label(
-    page2,
-    text="Was the camera or workspace moved?",
-    font=("Segoe UI", 14),
-    bg="#282a36",
-    fg="#dcdcdc"
-)
-desc2.pack(pady=10)
-
-btn2_yes = tk.Button(
-    page2,
-    text="Yes",
-    font=("Segoe UI", 12, "bold"),
-    bg="#ff6584",
-    fg="white",
-    activebackground="#e14d6c",
-    activeforeground="white",
-    relief="flat",
-    padx=20,
-    pady=10,
-    command=lambda: {run_workspace_moved_setup(),show_page(page3)}
-)
-btn2_yes.pack(pady=30)
-btn2_no = tk.Button(
-    page2,
-    text="No",
-    font=("Segoe UI", 12, "bold"),
-    bg="#ff6584",
-    fg="white",
-    activebackground="#e14d6c",
-    activeforeground="white",
-    relief="flat",
-    padx=20,
-    pady=10,
-    command=lambda: show_page(page3)
-)
-btn2_no.pack(pady=30)
-#Page3: Simulation and AI prompt
-title3 = tk.Label(
-    page3,
-    text="What do you want to do now?",
-    font=("Arial", 16, "bold"),
-    fg="white",
-    bg="#0f172a"
-)
-title3.pack(pady=40)
-btn_op1 = tk.Button(
-    page3,
-    text="1. Find objects first\nThen prompt the task",
-    font=("Arial", 12),
-    bg="#1f2937",
-    fg="white",
-    width=30,
-    height=3,
-    command=lambda:{ print("\nOkay. I will find the objects first."),run_multiple_cmds(["7", "8"]),print("\nNow I will start the simulation."),run_command("6"),show_page(End_page)},
-    relief="flat",
-    activebackground="#374151"
-)
-btn_op1.pack(pady=10)
-btn_op2 = tk.Button(
-    page3,
-    text="2. Directly prompt the task",
-    font=("Arial", 12),
-    bg="#2563eb",
-    fg="white",
-    width=30,
-    height=3,
-    command=lambda:{print("\nOkay. I will directly start the simulation."),run_command("6"),show_page(End_page)},
-    relief="flat",
-    activebackground="#1d4ed8"
-)
-btn_op2.pack(pady=10)
-title = tk.Label(
-=======
 # =====================================================
 # NAV BUTTONS
 # =====================================================
@@ -292,7 +134,6 @@ tk.Button(
 ).place(relx=0.5, rely=0.95, anchor="s")
 
 tk.Button(
->>>>>>> 4c263593b4ab5370b88bae0c7133d3b553b9c5de
     End_page,
     text="Exit",
     command=exit_app,
