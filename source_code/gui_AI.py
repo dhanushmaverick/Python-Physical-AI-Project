@@ -1,19 +1,18 @@
 from source_code.main import *
 import tkinter as tk
-from tkinter import ttk,messagebox
+from tkinter import ttk
 import cv2
-from source_code.utility.paths import *
 
 # =====================================================
 # IMAGE SETUP
 # =====================================================
-# cv2.imwrite(
-#     OBJ_SEGMENTATION_DIR/"Img.png",
-#     cv2.resize(
-#         cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
-#         (650, 650)
-#     )
-# )
+cv2.imwrite(
+    "source_code/vision/object_segmentation/Img.png",
+    cv2.resize(
+        cv2.imread("source_code/vision/object_segmentation/Img.jpeg"),
+        (650, 650)
+    )
+)
 
 cv2.imwrite(
     "source_code/utility/img_pg1.png",
@@ -40,30 +39,10 @@ RED = "#ff3b30"
 GREEN = "#13ec0c"
 BLUE = "#0b53ee"
 GRAY = "#2b2f36"
-DARK_GREEN = "#0c3b0a"
 # =====================================================
 # ROOT
 # =====================================================
 root = tk.Tk()
-# =====================================================
-# AUTO SCALING
-# =====================================================
-screen_w = root.winfo_screenwidth()
-screen_h = root.winfo_screenheight()
-
-# Scale relative to your design resolution
-BASE_W = 1920
-BASE_H = 1080
-
-scale_x = screen_w / BASE_W
-scale_y = screen_h / BASE_H
-scale = min(scale_x, scale_y)
-
-# Make application fill the screen
-root.geometry(f"{screen_w}x{screen_h}")
-
-# Tk scaling (affects fonts, widgets, paddings)
-root.tk.call("tk", "scaling", scale)
 root.title("Physical AI Simulator")
 root.geometry("1920x1080")
 root.configure(bg=BG)
@@ -116,8 +95,6 @@ def simulation(entry):
         run_command("6")
         show_page(End_page)
 
-
-    
 # =====================================================
 # IMAGES
 # =====================================================
@@ -238,25 +215,20 @@ tk.Label(
     bg=BG
 ).pack(pady=20)
 
-img_label=tk.Label(
+tk.Label(
     center,
     image=img_used,
     bg=BG
-)
-img_label.pack()
-def update_img():
-    img = tk.PhotoImage(file=OBJ_SEGMENTATION_DIR/"Img.png")
-    img_label.config(image=img)
-    img_label.image=img
-tk.Button(
+).pack()
+
+tk.Label(
     center,
-    text="Retake Image",
-    command= lambda:{run_command("2"),update_img()},
-    font=("Segoe UI", 25, "bold"),
-    bg=DARK_GREEN ,
+    text="User Query",
+    font=("Segoe UI", 26, "bold"),
     fg=TEXT,
-    bd=0
-).pack(pady=15)
+    bg=BG
+).pack(pady=20)
+
 input_entry = tk.Entry(
     center,
     font=("Segoe UI", 26),
@@ -267,22 +239,6 @@ input_entry = tk.Entry(
     justify="center"
 )
 input_entry.pack(ipady=16)   # BIGGER INPUT HEIGHT
-input_entry.insert(0,"User Query")
-
-def on_focus_in(event):
-    if input_entry.get() == "User Query":
-        input_entry.delete(0, tk.END)
-        input_entry.config(fg="#cccccc75")
-
-def on_focus_out(event):
-    if not input_entry.get():
-        input_entry.insert(0, "User Query")
-        input_entry.config(fg="cccccc75")
-
-input_entry.bind("<FocusIn>", on_focus_in)
-input_entry.bind("<FocusOut>", on_focus_out)
-
-
 
 bottom_buttons = tk.Frame(center, bg=BG)
 bottom_buttons.pack(pady=20)
@@ -383,7 +339,7 @@ tk.Button(
     end_frame,
     text="RESTART",
     command=lambda: show_page(HomePage),
-    font=("Segoe UI", 30, "bold"),
+    font=("Segoe UI", 26, "bold"),
     bg=GREEN,
     fg="black",
     bd=0

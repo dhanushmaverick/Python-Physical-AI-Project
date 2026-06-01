@@ -2,7 +2,44 @@
 import subprocess
 import sys
 import time
+from source_code.AI.open_ai_api import query
+import tkinter as tk
+from source_code.utility.paths import *
+from source_code.vision.camera.camera import Webcam
+import cv2
+from PIL import Image,ImageTk
+class Popup:
+    def __init__(self,parent):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Take desired image of the workspace")
+        self.cam = Webcam(0)
+        self.cam.open()
+        self.label = tk.Label(self.window).pack()
+        self.button = tk.Button(self.window,text="Take picture",command=self.take_pic).pack(pady = 10)
+        self.frame = self.cam.read()
+        self.update_cam()
 
+        self.window.protocol("WM_DELETE_WINDOW",self.close_window)
+    def update_cam(self):
+        self.frame = self.cam.read()
+
+        rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+
+        img = Image.fromarray(rgb)
+        photo = ImageTk.PhotoImage(img)
+
+        self.label.config(image=photo)
+        self.label.image = photo
+
+        self.window.after(15, self.update_cam)
+    def take_pic(self):
+        if self.frame is not None:
+            cv2.imwrite(OBJ_SEGMENTATION_DIR/"Img.png")
+            self.close_window()
+    def close_window(self):
+        self.cam.release()
+        self.window.destroy()
+        
 
 RUN_COMMANDS = {
     "1": {
@@ -136,7 +173,7 @@ def run_workspace_moved_setup():
     """
 
     print("\nOkay. I will update the workspace position.")
-    return run_command("5").returncode == 0
+    return run_multiple_cmds(["2","4","5"])
 
 
 def ask_object_and_simulation_choice():

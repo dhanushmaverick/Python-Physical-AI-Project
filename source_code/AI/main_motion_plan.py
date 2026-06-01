@@ -1,106 +1,95 @@
-import math
-from robodk.robolink import Robolink, ITEM_TYPE_ROBOT
-from robodk.robomath import *
+def run_motion(ctx):
+    """Stacking order: blue on red, then green on blue.
 
-# ------------------------------------------------------------
-# Auto-generated motion plan: Stack red on green, then blue.
-# ------------------------------------------------------------
+    All blocks are placed with the same orientation.
+    Note: +90 is added to the true yaw angles for lateral gripper alignment.
+    """
 
 RDK = Robolink()
 
-# Locate a UR5 robot in the station (name may vary)
-robot = None
-for name in ['UR5', 'UR5e', 'UR5_1', 'UR5e (UR5)', 'UR5e Robot']:
-    try:
-        itm = RDK.Item(name, ITEM_TYPE_ROBOT)
-        if itm.Valid():
-            robot = itm
-            break
-    except:
-        pass
-if robot is None:
-    robot = RDK.Item('', ITEM_TYPE_ROBOT)
+    # ------------------------------------------------------------
+    # Current block poses (from World coords / station setup)
+    # ------------------------------------------------------------
+    red_x, red_y = 20.162, 9.737
+    red_yaw = 91.0783 + 90
 
-# World (XY) positions provided
-red_xy = [19.456730487417932, 9.850884774922811]
-red_yaw_deg = 89.7196273803711
+    blue_x, blue_y = 81.481, 49.459
+    blue_yaw = 52.3926 + 90
 
-green_xy = [162.23254021556767, 75.20602232885692]
-green_yaw_deg = 26.975744247436527 
+    green_x, green_y = 161.319, 75.452
+    green_yaw = 14.3145 + 90
 
-blue_xy = [81.30805217450195, 49.41455508328906]
-blue_yaw_deg = 47.37146377563476
+    # ------------------------------------------------------------
+    # Z values from RoboDKContext
+    # ------------------------------------------------------------
+    approach_z = ctx.approach_z
+    pick_z = ctx.pick_z
+    place_base_z = ctx.place_base_z
+    block_thickness = ctx.block_thickness
 
-# Workspace/stack assumptions (adjust to your setup if needed)
-TABLE_Z = 0.0
-APPROACH_Z = 80.0     # safe height above pick/place (mm)
-PICK_Z = 0.0          # pick Z at block top/center plane (mm)
+    # ------------------------------------------------------------
+    # Use RED as the base location for the final stack
+    # ------------------------------------------------------------
+    stack_x = red_x
+    stack_y = red_y
 
-BLOCK_THICKNESS = 20.0  # mm (adjust to match your scene)
-def pose_from_xy_yaw(x, y, z, yaw_deg):
-    """Pose with rotation about Z by yaw_deg and translation (x,y,z)."""
-    yaw = math.radians(yaw_deg)
-    Rz = [[math.cos(yaw), -math.sin(yaw), 0],
-          [math.sin(yaw),  math.cos(yaw), 0],
-          [0,              0,             1]]
-    return transl(x, y, z) * Mat(Rz[0][0], Rz[0][1], Rz[0][2], 0,
-                               Rz[1][0], Rz[1][1], Rz[1][2], 0,
-                               Rz[2][0], Rz[2][1], Rz[2][2], 0,
-                               0,         0,         0,         1)
+    # Use consistent stack orientation (same for all stacked blocks)
+    # Choose red yaw as the reference.
+    stack_orient = red_yaw
 
-# Pick poses (above + at)
-red_pick_app = pose_from_xy_yaw(red_xy[0], red_xy[1], APPROACH_Z, red_yaw_deg)
-red_pick     = pose_from_xy_yaw(red_xy[0], red_xy[1], PICK_Z, red_yaw_deg)
+    red_place_z = place_base_z
+    blue_place_z = place_base_z + block_thickness
+    green_place_z = place_base_z + block_thickness * 2.0
 
-green_pick_app = pose_from_xy_yaw(green_xy[0], green_xy[1], APPROACH_Z, green_yaw_deg)
-green_pick     = pose_from_xy_yaw(green_xy[0], green_xy[1], PICK_Z, green_yaw_deg)
+    # ------------------------------------------------------------
+    # Pick RED (place onto stack base)
+    # ------------------------------------------------------------
+    ctx.open_gripper("red")
 
-blue_pick_app = pose_from_xy_yaw(blue_xy[0], blue_xy[1], APPROACH_Z, blue_yaw_deg)
-blue_pick     = pose_from_xy_yaw(blue_xy[0], blue_xy[1], PICK_Z, blue_yaw_deg)
+    robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
+    robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, pick_z, red_yaw))
+    ctx.close_gripper("red")
+    robot.MoveL(ctx.pose_xyz_yaw(red_x, red_y, approach_z, red_yaw))
 
-# Stacking target (base aligned to green XY)
-base_x, base_y = green_xy[0], green_xy[1]
-z_green_place = TABLE_Z + BLOCK_THICKNESS / 2.0
-z_red_place   = z_green_place + BLOCK_THICKNESS
-z_blue_place  = z_red_place + BLOCK_THICKNESS
+    # Place RED at base
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, red_place_z, stack_orient))
+    ctx.open_gripper("red")
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
 
-green_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, green_yaw_deg)
-green_place     = pose_from_xy_yaw(base_x, base_y, z_green_place, green_yaw_deg)
+    # ------------------------------------------------------------
+    # Pick BLUE and place on RED
+    # ------------------------------------------------------------
+    ctx.open_gripper("blue")
 
-red_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, red_yaw_deg)
-red_place     = pose_from_xy_yaw(base_x, base_y, z_red_place, red_yaw_deg)
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, pick_z, blue_yaw))
+    ctx.close_gripper("blue")
+    robot.MoveL(ctx.pose_xyz_yaw(blue_x, blue_y, approach_z, blue_yaw))
 
-blue_place_app = pose_from_xy_yaw(base_x, base_y, APPROACH_Z, blue_yaw_deg)
-blue_place     = pose_from_xy_yaw(base_x, base_y, z_blue_place, blue_yaw_deg)
+    # Place BLUE on RED
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, blue_place_z, stack_orient))
+    ctx.open_gripper("blue")
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
 
-# Build program
-program = robot.ProgStart('Stack_R_on_G_then_B')
+    # ------------------------------------------------------------
+    # Pick GREEN and place on BLUE
+    # ------------------------------------------------------------
+    ctx.open_gripper("green")
 
-# ---- Pick & place GREEN (bottom) ----
-robot.MoveL(green_pick_app, False)
-robot.MoveL(green_pick, False)
-robot.MoveL(green_pick_app, False)               # TODO: close gripper here
-robot.MoveL(green_place_app, False)
-robot.MoveL(green_place, False)
-robot.MoveL(green_place_app, False)             # TODO: open gripper here
+    robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
+    robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, pick_z, green_yaw))
+    ctx.close_gripper("green")
+    robot.MoveL(ctx.pose_xyz_yaw(green_x, green_y, approach_z, green_yaw))
 
-# ---- Pick & place RED (middle) ----
-robot.MoveL(red_pick_app, False)
-robot.MoveL(red_pick, False)
-robot.MoveL(red_pick_app, False)                 # TODO: close gripper here
-robot.MoveL(red_place_app, False)
-robot.MoveL(red_place, False)
-robot.MoveL(red_place_app, False)               # TODO: open gripper here
+    # Place GREEN on BLUE
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, green_place_z, stack_orient))
+    ctx.open_gripper("green")
+    robot.MoveL(ctx.pose_xyz_yaw(stack_x, stack_y, approach_z, stack_orient))
 
-# ---- Pick & place BLUE (top) ----
-robot.MoveL(blue_pick_app, False)
-robot.MoveL(blue_pick, False)
-robot.MoveL(blue_pick_app, False)                # TODO: close gripper here
-robot.MoveL(blue_place_app, False)
-robot.MoveL(blue_place, False)
-robot.MoveL(blue_place_app, False)              # TODO: open gripper here
-
-robot.ProgFinish(program)
-
-# Uncomment to run immediately (if desired)
-# RDK.RunProgram(program, True)
+    # ------------------------------------------------------------
+    # Return home
+    # ------------------------------------------------------------
+    ctx.go_home()
