@@ -17,4 +17,4 @@ image_file = RAW_IMAGES_DIR / "img_01.png"  # change this to test different imag
 camera_matrix, dist_coeffs = load_intrinsics(intrinsics_file)
 frame = cv2.imread(str(image_file))
 
-visualize_undistortion(frame, camera_matrix, dist_coeffs)
+#visualize_undistortion(frame, camera_matrix, dist_coeffs)

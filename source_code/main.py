@@ -173,7 +173,7 @@ def run_workspace_moved_setup():
     """
 
     print("\nOkay. I will update the workspace position.")
-    return run_command("5").returncode == 0
+    return run_multiple_cmds(["2","4","5"])
 
 
 def ask_object_and_simulation_choice():

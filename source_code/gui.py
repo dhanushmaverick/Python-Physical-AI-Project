@@ -7,13 +7,13 @@ from source_code.utility.paths import *
 # =====================================================
 # IMAGE SETUP
 # =====================================================
-cv2.imwrite(
-    OBJ_SEGMENTATION_DIR/"Img.png",
-    cv2.resize(
-        cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
-        (650, 650)
-    )
-)
+# cv2.imwrite(
+#     OBJ_SEGMENTATION_DIR/"Img.png",
+#     cv2.resize(
+#         cv2.imread(OBJ_SEGMENTATION_DIR/"Img.jpeg"),
+#         (650, 650)
+#     )
+# )
 
 cv2.imwrite(
     "source_code/utility/img_pg1.png",
@@ -95,6 +95,9 @@ def simulation(entry):
         query(input_entry.get())
         run_command("6")
         show_page(End_page)
+
+
+    
 # =====================================================
 # IMAGES
 # =====================================================
@@ -215,20 +218,25 @@ tk.Label(
     bg=BG
 ).pack(pady=20)
 
-tk.Label(
+img_label=tk.Label(
     center,
     image=img_used,
     bg=BG
-).pack()
-
-#tk.Label(
- #   center,
-  #  text="User Query",
- #   font=("Segoe UI", 26, "bold"),
- #   fg=TEXT,
- #   bg=BG
-#).pack(pady=20)
-
+)
+img_label.pack()
+def update_img():
+    img = tk.PhotoImage(file=OBJ_SEGMENTATION_DIR/"Img.png")
+    img_label.config(image=img)
+    img_label.image=img
+tk.Button(
+    center,
+    text="Retake Image",
+    command= lambda:{run_command("2"),update_img()},
+    font=("Segoe UI", 25, "bold"),
+    bg=CARD,
+    fg=TEXT,
+    bd=0
+).pack(pady=15)
 input_entry = tk.Entry(
     center,
     font=("Segoe UI", 26),
@@ -254,15 +262,7 @@ def on_focus_out(event):
 input_entry.bind("<FocusIn>", on_focus_in)
 input_entry.bind("<FocusOut>", on_focus_out)
 
-tk.Button(
-    center,
-    text="Change picture to be used",
-    command= lambda:run_command("2"),
-    font=("Segoe UI", 25, "bold"),
-    bg=CARD,
-    fg=TEXT,
-    bd=0
-).pack(pady=15)
+
 
 bottom_buttons = tk.Frame(center, bg=BG)
 bottom_buttons.pack(pady=20)

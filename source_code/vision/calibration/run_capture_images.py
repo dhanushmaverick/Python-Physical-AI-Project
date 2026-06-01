@@ -61,6 +61,7 @@ while True:
         cv2.imwrite(str(filename), frame)
         print(f"Saved: {filename}")
         count += 1
+        break
 
     elif key == ord('q'):
         break
