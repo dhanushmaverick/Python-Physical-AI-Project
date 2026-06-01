@@ -29,7 +29,7 @@ Example:
 """
 # Run camera calibration after this
 
-from source_code.utility.paths import RAW_IMAGES_DIR, ensure_directories
+from source_code.utility.paths import *
 import cv2
 
 ensure_directories()
@@ -53,6 +53,11 @@ while True:
     if key == ord('s'):
         print("CLICK S to SAVE")
         filename = RAW_IMAGES_DIR / f"img_{count:02d}.png"
+        cv2.imwrite(str(filename), frame)
+        print(f"Saved: {filename}")
+        count += 1
+    if key == ord('\r'):   #if enter key is pressed, save the image
+        filename = OBJ_SEGMENTATION_DIR / f"Img.png"
         cv2.imwrite(str(filename), frame)
         print(f"Saved: {filename}")
         count += 1

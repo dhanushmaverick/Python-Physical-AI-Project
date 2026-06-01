@@ -11,16 +11,16 @@ def load_ai_motion_script():
     
     ai_script_path = AI_MOTION_PLAN_PATH 
 
-    if not ai_script_path.exists():
-        raise FileNotFoundError(f"AI motion script not found:\n{ai_script_path}")
+    if not AI_MOTION_PLAN_PATH.exists():
+        raise FileNotFoundError(f"AI motion script not found:\n{AI_MOTION_PLAN_PATH}")
 
     spec = importlib.util.spec_from_file_location(
         "main_motion_plan",
-        ai_script_path,
+        AI_MOTION_PLAN_PATH,
     )
 
     if spec is None or spec.loader is None:
-        raise RuntimeError(f"Could not load AI motion script:\n{ai_script_path}")
+        raise RuntimeError(f"Could not load AI motion script:\n{AI_MOTION_PLAN_PATH}")
 
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

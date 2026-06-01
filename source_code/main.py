@@ -179,7 +179,7 @@ def run_workspace_moved_setup():
 def ask_object_and_simulation_choice():
     print("\nWhat do you want to do now?")
     print("1. Find objects first, then Prompt the task?")
-    print("2. Directly Prompt the task?")
+    print("2. Directly Prompt the task and Simulate?")
 
     while True:
         choice = input("\nChoose 1, 2, or q to quit: ").strip().lower()

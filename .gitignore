@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 # Environment variables
 source_code/AI/.env
+source_code/AI/key.env
