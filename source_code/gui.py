@@ -40,10 +40,30 @@ RED = "#ff3b30"
 GREEN = "#13ec0c"
 BLUE = "#0b53ee"
 GRAY = "#2b2f36"
+DARK_GREEN = "#0c3b0a"
 # =====================================================
 # ROOT
 # =====================================================
 root = tk.Tk()
+# =====================================================
+# AUTO SCALING
+# =====================================================
+screen_w = root.winfo_screenwidth()
+screen_h = root.winfo_screenheight()
+
+# Scale relative to your design resolution
+BASE_W = 1920
+BASE_H = 1080
+
+scale_x = screen_w / BASE_W
+scale_y = screen_h / BASE_H
+scale = min(scale_x, scale_y)
+
+# Make application fill the screen
+root.geometry(f"{screen_w}x{screen_h}")
+
+# Tk scaling (affects fonts, widgets, paddings)
+root.tk.call("tk", "scaling", scale)
 root.title("Physical AI Simulator")
 root.geometry("1920x1080")
 root.configure(bg=BG)
@@ -233,7 +253,7 @@ tk.Button(
     text="Retake Image",
     command= lambda:{run_command("2"),update_img()},
     font=("Segoe UI", 25, "bold"),
-    bg=CARD,
+    bg=DARK_GREEN ,
     fg=TEXT,
     bd=0
 ).pack(pady=15)
