@@ -136,14 +136,15 @@ def on_resize(event):
 
 root.bind("<Configure>", on_resize)
 def calibrate_workspace_click():
-    messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation and recompute the homography \n2. Press q to close the camera.")
+    messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation and recompute the homography \n2. Press q to close the camera.\n\n\n Rules to consider: \nRule 1: One calibration corner should coincide with the desired world origin.\n World Origin = (0,0) \nRule 2: When selecting homography points, begin at the origin and proceed anti-clockwise.\nRule 3: The usable workspace is restricted to the camera view from the robot home position.\n")
     return
 def Retake_click():
     messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation \n2. Press q to close the camera.")
     return
 def calibrate_camera_click():
-    messagebox.showinfo("Instructions", "1. Press s to save image for calibration.\n2. Press q to close the camera when done.\n3. Around 20 pictures of the workspace should be enough for a good calibration.")
+    messagebox.showinfo("Instructions", "1. Press s to save image for calibration.\n2. Press q to close the camera when done.\n3. Around 20 pictures of the workspace should be enough for a good calibration.\n\n\nRules to consider: \nRule 1: All four calibration corners must remain visible.\nRule 2: The calibration board may be translated or rotated.\nRule 3: One calibration corner should coincide with the desired world origin.\nWorld Origin = (0,0) \nRule 4: When selecting calibration points, begin at the origin and proceed anti-clockwise.\nRule 5: The usable workspace is restricted to the camera view from the robot home position.\n")
     return
+
 # =====================================================
 # IMAGES
 # =====================================================
@@ -176,7 +177,7 @@ tk.Button(
     HomePage,
     text="Exit",
     command=exit_app,
-    font=("Segoe UI", 26, "bold"),
+    font=("Segoe UI", 36, "bold"),
     bg=RED,
     fg="white",
     bd=0
