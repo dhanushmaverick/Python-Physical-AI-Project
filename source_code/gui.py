@@ -45,27 +45,23 @@ DARK_GREEN = "#0c3b0a"
 # ROOT
 # =====================================================
 root = tk.Tk()
+root.attributes("-fullscreen", "1")  # Start maximized
 # =====================================================
 # AUTO SCALING
 # =====================================================
 screen_w = root.winfo_screenwidth()
 screen_h = root.winfo_screenheight()
 
-# Scale relative to your design resolution
-BASE_W = 1920
-BASE_H = 1080
+BASE_WIDTH = 1920
+BASE_HEIGHT = 1080
+scale = min(screen_w / BASE_WIDTH, screen_h / BASE_HEIGHT)
+root.tk.call("tk", "scaling", scale)
 
-scale_x = screen_w / BASE_W
-scale_y = screen_h / BASE_H
-scale = min(scale_x, scale_y)
-
-# Make application fill the screen
+root.title("Physical AI Simulator")
 root.geometry(f"{screen_w}x{screen_h}")
 
-# Tk scaling (affects fonts, widgets, paddings)
 root.tk.call("tk", "scaling", scale)
-root.title("Physical AI Simulator")
-root.geometry("1920x1080")
+
 root.configure(bg=BG)
 
 container = tk.Frame(root, bg=BG)
@@ -79,16 +75,23 @@ container.grid_columnconfigure(0, weight=1)
 # =====================================================
 HomePage = tk.Frame(container, bg=BG)
 HomePage.grid(row=0, column=0, sticky="nsew")
-
+HomePage.grid_rowconfigure(0, weight=1)
+HomePage.grid_columnconfigure(0, weight=1)
 page1 = tk.Frame(container, bg=BG)
 page1.grid(row=0, column=0, sticky="nsew")
+page1.grid_rowconfigure(0, weight=1)
 
+page1.grid_columnconfigure(0, weight=1)
+page1.grid_columnconfigure(1, weight=2)
+page1.grid_columnconfigure(2, weight=1)
 page2 = tk.Frame(container, bg=BG)
 page2.grid(row=0, column=0, sticky="nsew")
-
+page2.grid_rowconfigure(0, weight=1)
+page2.grid_columnconfigure(0, weight=1)
 End_page = tk.Frame(container, bg=BG)
 End_page.grid(row=0, column=0, sticky="nsew")
-
+End_page.grid_rowconfigure(0, weight=1)
+End_page.grid_columnconfigure(0, weight=1)
 current_page = HomePage
 page_list = [HomePage, page1, page2, End_page]
 
@@ -115,9 +118,26 @@ def simulation(entry):
         query(input_entry.get())
         run_command("6")
         show_page(End_page)
+def on_resize(event):
+    scale = min(
+        event.width / BASE_WIDTH,
+        event.height / BASE_HEIGHT
+    )
 
+    new_scale = max(0.8, scale)
 
-    
+    root.tk.call("tk", "scaling", new_scale)
+
+root.bind("<Configure>", on_resize)
+def calibrate_workspace_click():
+    messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation and recompute the homography \n2. Press q to close the camera.")
+    return
+def Retake_click():
+    messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation \n2. Press q to close the camera.")
+    return
+def calibrate_camera_click():
+    messagebox.showinfo("Instructions", "1. Press s to save image for calibration.\n2. Press q to close the camera when done.\n3. Around 20 pictures of the workspace should be enough for a good calibration.")
+    return
 # =====================================================
 # IMAGES
 # =====================================================
@@ -170,7 +190,7 @@ tk.Button(
 # HOME PAGE
 # =====================================================
 home_frame = tk.Frame(HomePage, bg=BG)
-home_frame.place(relx=0.5, rely=0.5, anchor="center")
+home_frame.grid(row=0, column=0)
 
 tk.Label(
     home_frame,
@@ -205,7 +225,7 @@ tk.Button(
 # LEFT PANEL
 # =====================================================
 left = tk.Frame(page1, bg=BG)
-left.place(relx=0.15, rely=0.55, anchor="center")
+left.grid(row=0, column=0, sticky="", padx=20)
 
 tk.Label(
     left,
@@ -218,18 +238,18 @@ tk.Label(
 tk.Button(
     left,
     text="Calibrate Workspace",
-    command=lambda: run_workspace_moved_setup(),
+    command=lambda: {calibrate_workspace_click(), run_workspace_moved_setup()},
     font=("Segoe UI", 25, "bold"),
     bg=BLUE,
     fg=TEXT,
     bd=0
-).pack(pady=15)
+).pack(pady=15,expand=True)
 
 # =====================================================
 # CENTER PANEL
 # =====================================================
 center = tk.Frame(page1, bg=BG)
-center.place(relx=0.52, rely=0.5, anchor="center")
+center.grid(row=0, column=1, sticky="", padx=20)
 tk.Label(
     center,
     text="Camera and Workspace Setup",
@@ -251,7 +271,7 @@ def update_img():
 tk.Button(
     center,
     text="Retake Image",
-    command= lambda:{run_command("2"),update_img()},
+    command= lambda:{Retake_click(),run_command("2"),update_img()},
     font=("Segoe UI", 25, "bold"),
     bg=DARK_GREEN ,
     fg=TEXT,
@@ -311,7 +331,7 @@ tk.Button(
 # RIGHT PANEL
 # =====================================================
 right = tk.Frame(page1, bg=BG)
-right.place(relx=0.85, rely=0.55, anchor="center")
+right.grid(row=0, column=2, sticky="", padx=20)
 
 tk.Label(
     right,
@@ -319,7 +339,7 @@ tk.Label(
     font=("Segoe UI", 28, "bold"),
     fg=MUTED,
     bg=BG
-).pack(pady=10)
+).pack(pady=10,expand=True)
 
 tk.Button(
     right,
@@ -335,7 +355,7 @@ tk.Button(
 # PAGE 2
 # =====================================================
 p2 = tk.Frame(page2, bg=BG)
-p2.place(relx=0.5, rely=0.5, anchor="center")
+p2.grid(row=0, column=0)
 
 tk.Label(
     p2,
@@ -348,7 +368,7 @@ tk.Label(
 tk.Button(
     p2,
     text="YES and clear calibration images",
-    command=lambda: {run_new_camera_setup(True), show_page(page1)},
+    command=lambda: {calibrate_camera_click(), run_new_camera_setup(True), show_page(page1)},
     font=("Segoe UI", 25, "bold"),
     bg=CARD,
     fg="white",
@@ -358,7 +378,7 @@ tk.Button(
 tk.Button(
     p2,
     text="YES but keep existing calibration images",
-    command=lambda: {run_new_camera_setup(False), show_page(page1)},
+    command=lambda: {calibrate_camera_click(), run_new_camera_setup(False), show_page(page1)},
     font=("Segoe UI", 25, "bold"),
     bg=BLACK,
     fg=TEXT,
@@ -369,7 +389,7 @@ tk.Button(
 # END PAGE
 # =====================================================
 end_frame = tk.Frame(End_page, bg=BG)
-end_frame.place(relx=0.5, rely=0.5, anchor="center")
+end_frame.grid(row=0, column=0)
 
 tk.Label(
     end_frame,
