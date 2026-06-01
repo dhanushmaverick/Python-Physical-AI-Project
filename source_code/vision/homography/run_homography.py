@@ -87,8 +87,8 @@ print(image_pts)
 #  The order of these points must match the order in which they were clicked in the image for accurate homography computation.
 world_pts = np.array([
     [0, 0],
-    [180, 0],
-    [180, 120],
+    [120, 0],
+    [120, 120],
     [0, 120]
 ], dtype=np.float32)
 
