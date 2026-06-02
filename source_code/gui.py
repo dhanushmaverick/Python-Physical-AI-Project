@@ -364,7 +364,7 @@ p2.grid(row=0, column=0)
 
 tk.Label(
     p2,
-    text="Do you want to recalibrate your camera from Scratch?",
+    text="Want to recalibrate your camera from Scratch?",
     font=("Segoe UI", 32, "bold"),
     fg=TEXT,
     bg=BG
@@ -385,7 +385,7 @@ tk.Button(
     text="No, take more images to improve calibration",
     command=lambda: {calibrate_click(), run_new_camera_setup(False), show_page(page1)},
     font=("Segoe UI", 25, "bold"),
-    bg=BLACK,
+    bg=BLUE,
     fg=TEXT,
     bd=0
 ).pack(pady=10)
