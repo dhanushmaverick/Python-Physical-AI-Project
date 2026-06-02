@@ -135,14 +135,12 @@ def on_resize(event):
     root.tk.call("tk", "scaling", new_scale)
 
 root.bind("<Configure>", on_resize)
-def calibrate_workspace_click():
-    messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation and recompute the homography \n2. Press q to close the camera.\n\n\n Rules to consider: \nRule 1: One calibration corner should coincide with the desired world origin.\n World Origin = (0,0) \nRule 2: When selecting homography points, begin at the origin and proceed anti-clockwise.\nRule 3: The usable workspace is restricted to the camera view from the robot home position.\n")
+def calibrate_click():
+    messagebox.showinfo("Instructions", "1. Press s to save image for calibration.\n2. Press q to close the camera when done.\n3. Around 20 pictures of the workspace should be enough for a good calibration.\n\n\nRules to consider: \nRule 1: All four calibration corners must remain visible.\nRule 2: The calibration board may be translated or rotated.\nRule 3: One calibration corner should coincide with the desired world origin.\nWorld Origin = (0,0) \nRule 4: When selecting calibration points, begin at the origin and proceed anti-clockwise.\nRule 5: The usable workspace is restricted to the camera view from the robot home position.\n")
+
     return
 def Retake_click():
     messagebox.showinfo("Instructions", "1. Press Enter key to retake image to be used for simulation \n2. Press q to close the camera.")
-    return
-def calibrate_camera_click():
-    messagebox.showinfo("Instructions", "1. Press s to save image for calibration.\n2. Press q to close the camera when done.\n3. Around 20 pictures of the workspace should be enough for a good calibration.\n\n\nRules to consider: \nRule 1: All four calibration corners must remain visible.\nRule 2: The calibration board may be translated or rotated.\nRule 3: One calibration corner should coincide with the desired world origin.\nWorld Origin = (0,0) \nRule 4: When selecting calibration points, begin at the origin and proceed anti-clockwise.\nRule 5: The usable workspace is restricted to the camera view from the robot home position.\n")
     return
 
 # =====================================================
@@ -245,7 +243,7 @@ tk.Label(
 tk.Button(
     left,
     text="Calibrate Workspace",
-    command=lambda: {calibrate_workspace_click(), run_workspace_moved_setup()},
+    command=lambda: {calibrate_click(), run_workspace_moved_setup()},
     font=("Segoe UI", 25, "bold"),
     bg=BLUE,
     fg=TEXT,
@@ -342,7 +340,7 @@ right.grid(row=0, column=2, sticky="", padx=20)
 
 tk.Label(
     right,
-    text="Was the camera changed?",
+    text="Do you want to recalibrate your camera?",
     font=("Segoe UI", 28, "bold"),
     fg=MUTED,
     bg=BG
@@ -366,7 +364,7 @@ p2.grid(row=0, column=0)
 
 tk.Label(
     p2,
-    text="Is this a new Camera?",
+    text="Do you want to recalibrate your camera from Scratch?",
     font=("Segoe UI", 32, "bold"),
     fg=TEXT,
     bg=BG
@@ -374,8 +372,8 @@ tk.Label(
 
 tk.Button(
     p2,
-    text="YES and clear calibration images",
-    command=lambda: {calibrate_camera_click(), run_new_camera_setup(True), show_page(page1)},
+    text="Yes, clear all calibration images",
+    command=lambda: {calibrate_click(), run_new_camera_setup(True), show_page(page1)},
     font=("Segoe UI", 25, "bold"),
     bg=CARD,
     fg="white",
@@ -384,8 +382,8 @@ tk.Button(
 
 tk.Button(
     p2,
-    text="YES but keep existing calibration images",
-    command=lambda: {calibrate_camera_click(), run_new_camera_setup(False), show_page(page1)},
+    text="No, take more images to improve calibration",
+    command=lambda: {calibrate_click(), run_new_camera_setup(False), show_page(page1)},
     font=("Segoe UI", 25, "bold"),
     bg=BLACK,
     fg=TEXT,
