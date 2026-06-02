@@ -340,7 +340,7 @@ right.grid(row=0, column=2, sticky="", padx=20)
 
 tk.Label(
     right,
-    text="Do you want to recalibrate your camera?",
+    text="Want to recalibrate your camera?",
     font=("Segoe UI", 28, "bold"),
     fg=MUTED,
     bg=BG
@@ -364,7 +364,7 @@ p2.grid(row=0, column=0)
 
 tk.Label(
     p2,
-    text="Want to recalibrate your camera from Scratch?",
+    text="Do you want to recalibrate your camera from Scratch?",
     font=("Segoe UI", 32, "bold"),
     fg=TEXT,
     bg=BG
