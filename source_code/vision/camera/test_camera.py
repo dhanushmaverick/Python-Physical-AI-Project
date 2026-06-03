@@ -13,7 +13,7 @@ def main():
     parser.add_argument(
         "--camera",
         type=int,
-        default=0,
+        default=2,
         help="Camera number to use. Default is 0."
     )
 
