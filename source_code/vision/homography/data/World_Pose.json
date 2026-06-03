@@ -1,17 +1,17 @@
 {
     "red_block_position": [
-        125.67,
-        87.024
+        65.495,
+        76.019
     ],
-    "red_block_orientation": 30.3811,
+    "red_block_orientation": 2.4236,
     "green_block_position": [
-        26.403,
-        93.67
+        14.167,
+        71.612
     ],
-    "green_block_orientation": 96.0638,
+    "green_block_orientation": 49.6286,
     "blue_block_position": [
-        28.929,
-        98.835
+        27.429,
+        36.026
     ],
-    "blue_block_orientation": 45.7749
+    "blue_block_orientation": 120.7707
 }
