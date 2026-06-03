@@ -57,9 +57,6 @@ def main():
     print("[SUCCESS] RoboDK AI runner finished.")
     time.sleep(5)  # Keep RoboDK open for a few seconds after execution
 
-    AI_MOTION_PLAN_PATH.unlink()  # Delete the AI motion script after execution
-
-
 
 
 

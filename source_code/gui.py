@@ -1,3 +1,5 @@
+
+
 from source_code.main import *
 import tkinter as tk
 from tkinter import ttk,messagebox
@@ -121,6 +123,9 @@ def simulation(entry):
         show_page(End_page)
     else:
         run_multiple_cmds(["7", "8"])
+        file = open(AI_MOTION_PLAN_PATH, "w")
+        file.write("")
+        file.close()  # Clear previous motion plan
         query(input_entry.get())
         run_command("6")
         show_page(End_page)
