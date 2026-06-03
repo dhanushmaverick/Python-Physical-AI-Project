@@ -46,14 +46,13 @@ while True:
         raise RuntimeError("NO_CAMERA_FOUND")
 
     cv2.imshow(f"  CAMERA:     [S] CAPTURE        |        [Q] QUIT       |        PICTURE_NUMBER:{count}", frame)
-    
-
-    key = cv2.waitKey(1)
+    key = cv2.waitKey(1) # waitKey(1) waits for a key event for 1 millisecond, allowing the video stream to update continuously while also checking for user input. If a key is pressed, it returns the ASCII code of the key; otherwise, it returns -1. This allows us to capture user input without blocking the video stream.
 
     if key == ord('s'):
         print("CLICK S to SAVE")
         filename = RAW_IMAGES_DIR / f"img_{count:02d}.png"
         cv2.imwrite(str(filename), frame)
+        cv2.destroyAllWindows()
         print(f"Saved: {filename}")
         count += 1
     if key == ord('\r'):   #if enter key is pressed, save the image
