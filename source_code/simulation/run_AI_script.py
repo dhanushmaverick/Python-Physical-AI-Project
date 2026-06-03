@@ -5,6 +5,7 @@
 import importlib.util
 from .RoboDK_config import RoboDKContext
 from source_code.utility.paths import *
+import time
 
 
 def load_ai_motion_script():
@@ -54,6 +55,12 @@ def main():
     ai_motion_script.run_motion(ctx)
 
     print("[SUCCESS] RoboDK AI runner finished.")
+    time.sleep(5)  # Keep RoboDK open for a few seconds after execution
+
+    AI_MOTION_PLAN_PATH.unlink()  # Delete the AI motion script after execution
+
+
+
 
 
 if __name__ == "__main__":
