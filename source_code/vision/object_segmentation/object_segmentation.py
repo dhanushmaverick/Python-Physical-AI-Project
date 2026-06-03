@@ -135,7 +135,7 @@ def I_pro(im):
             
     except Exception as e:
         print("No blue block found")
- 
+   
     processed_data = {
             "red_block_position": m_red_center.tolist(),
             "red_block_orientation": m_red[0].theta*(180/math.pi),
