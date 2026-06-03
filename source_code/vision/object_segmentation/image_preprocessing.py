@@ -7,7 +7,7 @@ from source_code.utility.paths import OBJ_SEGMENTATION_DIR
 def threshold_image_RGB(im):
 #Only 5 params can be customised: The threshold vals for R,G and B channels and the min and max areas for iblobs function.
     #im = cv2.imread(im)
-    thresh_vals = [0.45, 0.39, 0.55];
+    thresh_vals = [0.45, 0.42, 0.55];
     B, G, R = cv2.split(im)
 
     R = R.astype(np.float32)
@@ -32,22 +32,25 @@ def threshold_image_RGB(im):
        
 
     r_thresh = (r > r_thresh_val).astype('uint8') * 255
+    
     g_thresh = (g>g_thresh_val).astype('uint8')*255
+    
     b_thresh = (b>b_thresh_val).astype('uint8')*255
+    
      
      # Morphological cleanup
     kernel = np.ones((5,5), np.uint8)
-    r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_ERODE,kernel)
-    r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_OPEN,kernel)
-    r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_DILATE,kernel)
+    # r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_ERODE,kernel)
+    # r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_OPEN,kernel)
+    # r_thresh = cv2.morphologyEx(r_thresh,cv2.MORPH_DILATE,kernel)
 
-    g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_ERODE,kernel)
-    g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_OPEN,kernel)
-    g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_DILATE,kernel)
+    # g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_ERODE,kernel)
+    # g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_OPEN,kernel)
+    # g_thresh = cv2.morphologyEx(g_thresh,cv2.MORPH_DILATE,kernel)
 
-    b_thresh = cv2.morphologyEx(b_thresh,cv2.MORPH_ERODE,kernel)
-    b_thresh = cv2.morphologyEx(b_thresh, cv2.MORPH_OPEN, kernel)
-    b_thresh = cv2.morphologyEx(b_thresh,cv2.MORPH_DILATE,kernel)
+    # b_thresh = cv2.morphologyEx(b_thresh,cv2.MORPH_ERODE,kernel)
+    # b_thresh = cv2.morphologyEx(b_thresh, cv2.MORPH_OPEN, kernel)
+    # b_thresh = cv2.morphologyEx(b_thresh,cv2.MORPH_DILATE,kernel)
 
 
     #_,r_thresh =cv2.threshold(cv2.imread('scripts/Bin_img.jpeg',cv2.IMREAD_GRAYSCALE),127,255,cv2.THRESH_BINARY); #(r>0.6).astype('uint8')*255;
