@@ -45,7 +45,7 @@ while True:
     if not ret:
         raise RuntimeError("NO_CAMERA_FOUND")
 
-    cv2.imshow("Webcam", frame)
+    cv2.imshow(f"  CAMERA:     [S] CAPTURE        |        [Q] QUIT       |        PICTURE_NUMBER:{count}", frame)
     
 
     key = cv2.waitKey(1)
