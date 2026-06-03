@@ -34,7 +34,7 @@ import cv2
 
 ensure_directories()
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 count = 0
 

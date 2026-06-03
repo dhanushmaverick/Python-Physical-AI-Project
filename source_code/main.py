@@ -46,7 +46,7 @@ RUN_COMMANDS = {
     },
     "9": {
         "name": "Clear existing calibration images",
-        "cmd": [sys.executable, "-m", "source_code.vision.camera.clear_raw_images"],
+        "cmd": [sys.executable, "-m", "source_code.vision.calibration.clear_raw_images"],
     },
 }
 
